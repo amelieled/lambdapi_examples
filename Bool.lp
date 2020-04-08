@@ -6,22 +6,21 @@ rule bool_ind _ &t _  true  → &t
  and bool_ind _ _  &f false → &f
                               
 // Negation
-symbol not : B ⇒ B
-rule not true  → false
- and not false → true
+symbol negb : B ⇒ B
+rule negb true  → false
+ and negb false → true
 
 // Disjunction
-symbol or : B ⇒ B ⇒ B
-set infix left 6 "|" ≔ or
+symbol orb : B ⇒ B ⇒ B
+set infix left 6 "|" ≔ orb
 rule true | _  → true
  and _  | true → true
  and false | &b → &b
  and &b | false → &b
 
 // Conjunction
-symbol {|and|} : B ⇒ B ⇒ B
-set infix left 7 "^" ≔ {|and|}
-rule true ^ &b → &b
- and &b ^ true → &b
- and false ^ _  → false
- and _  ^ false → false
+symbol andb : B ⇒ B ⇒ B
+rule andb true &b → &b
+ and andb &b true → &b
+ and andb false _  → false
+ and andb _  false → false

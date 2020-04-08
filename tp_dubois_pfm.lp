@@ -184,12 +184,12 @@ definition apply_neg (f: _ ⇒ _ ⇒ B) b1 b2 ≔ f (negb b1) (negb b2)
 type apply_neg
 
 // Definition nor := apply_neg andb. @TODO_1
-// definition nor : B ⇒ B ⇒ B  ≔ apply_neg andb    // non
+definition nor : B ⇒ B ⇒ B  ≔ apply_neg andb    // non
 // definition nor a b ≔ apply_neg andb a b         // non
 // definition nor (a:B) (b:B) ≔ apply_neg andb a b // non
                              
 // Check nor.
-// type nor
+type nor
  
 // Definition norb := 
 //   apply_neg (fun b1 => fun b2 => b2).
@@ -302,6 +302,7 @@ type true // (* true : B *)
 // Lemma bool_trivial : forall (P : bool -> Prop) b, P b -> P b.
 // Admitted.
 theorem bool_trivial : ∀(P:B ⇒ Prop) b, π (P b) ⇒ π (P b)
+//π (imp (P b) (P b))
 // Note : Check (_ ⇒ _) donne TYPE ⇒ TYPE
 proof
   assume P b H
@@ -357,7 +358,8 @@ qed
 //set declared "<>"
 //definition diff a b ≔ ¬(eq a b)
 //set infix left 6 <> ≔ diff
- 
+
+// symbol false_elim p : π ⊥ ⇒ π p
 
 theorem discr : π (eq {bool} false true) ⇒ π ⊥                             //  @TODO_4_admit
 proof
@@ -450,7 +452,7 @@ qed
 theorem plus_0_n : ∀n, π (eq {nat} (plus O n) n)
 proof
   assume n
-  refine eq_refl n
+  refine eq_refl m
 qed
 
 // Induction principle
@@ -509,8 +511,7 @@ qed
 //Qed.
 theorem mult_n_0 : ∀n, π (eq {nat} (n*0) 0)
 proof
-  assume n
-  refine nat_ind (λz, eq {nat} (z*0) 0) _ _ n
+  refine nat_ind (λz, eq {nat} (z*0) 0) _ _
   // Case n = O
   refine eq_refl O
   // Case = S n'
@@ -663,15 +664,20 @@ proof
                                (plus (mult z m) (mult z p))) _ _ n
   reflexivity
   simpl assume n' IHn' rewrite IHn'
-  rewrite plus_comm p (n'*p) 
-  //rewrite <- plus_assoc m (n'*m) (n'*p+p)
-  //rewrite plus_comm m (n*m + (n*p + p))
+  rewrite plus_comm p (n'*p)
+  symmetry
+  //rewrite plus_assoc m (mult n' m) (plus (mult n' p) p)
+  //symmetry
+  //rewrite plus_comm p (n'*p)
+  //symmetry
+  //rewrite plus_comm m (plus (mult n' m) (plus (mult n' p) p))
   //rewrite plus_assoc rewrite plus_assoc
   //rewrite plus_comm m p
   //rewrite <- plus_assoc (p + m) (n*m) (n*p)
   //rewrite plus_comm (p + m) (n*m + n*p)
   //rewrite plus_assoc reflexivity
-admit // @TODO_5
+//qed // @TODO_5
+admit
 
 // 
 //(* Prouver en utilisant les lemmes precedents
@@ -860,9 +866,10 @@ qed
 //specialize (H1 n0).
 //contradiction.
 //Qed.
-//theorem exists_not_forall : ∀(P : N ⇒ Prop), (∃n, π(P n)) ⇒ π (¬(∀m, π (¬ (P m)))))
-//proof
-//qed
+//\pi(\not(forall (\lambda m, \not(p m)))
+// theorem exists_not_forall :∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(all(λm:τ nat, ¬ (P m))))
+// proof
+// qed
 //@TODO_
 
 ////////////////////////
@@ -886,17 +893,17 @@ theorem sum_length : ∀A (l1 l2 : L A), π (eq {nat} (plus (length A l1) (lengt
 proof
   assume A l1 l2
   
-qed
+admit
 
 //(* Definir la fonction qui renverse une liste (on utilisera la fonction précédente app)
 // et  montrer que reverse(reverse l) = l pour tout l, par induction sur l*)
-symbol reverse A : L A
-rule reverse nil          → nil
- and reverse (cons &v &q) → app (reverse &q) (cons &v nil)
+// symbol reverse A : L A
+// rule reverse nil          → nil
+//  and reverse (cons &v &q) → app (reverse &q) (cons &v nil)
 
-theorem fixpoint_reverse : ∀l, reverse(reverse l) = l
-proof
-qed
+// theorem fixpoint_reverse : ∀l, reverse(reverse l) = l
+// proof
+// qed
 
 //////////////////////////
 //(** Exercice 5 *)
