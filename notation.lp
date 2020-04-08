@@ -25,8 +25,8 @@ set builtin "+1" ≔ S
 // Leibniz equality
 constant symbol eq {a} : τ a ⇒ τ a ⇒ Prop
 set infix 1 "=" ≔ eq
-constant symbol eq_refl {a} (x:τ a) : π (x = x)
-constant symbol eq_ind {a} (x y:τ a) : π (x = y) ⇒ ∀P, π (P y) ⇒ π (P x)
+constant symbol eq_refl {a} (x : τ a) : π (x = x)
+constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
 
 // Set builtins for the rewrite tactic
 set builtin "P"     ≔ π

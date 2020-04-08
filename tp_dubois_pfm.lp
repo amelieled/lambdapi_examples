@@ -244,15 +244,14 @@ definition id A x:A ≔ x
 //  | cons _ _ t => S (length A t)
 //  end. 
 
-symbol length A : L A ⇒ N
-rule length _ (nil _) → 0
- and length &A (cons _ _ &t) → &t
+symbol length {A} : L A ⇒ N
+rule length nil → 0
+ and length (cons _ &t) → S (length &t)
                       
 //Eval compute in (length bool 
 //   (cons bool true 
 //         (cons bool false (nil bool)))).
-compute (length bool (cons {bool} true
-                            (cons {bool} false (nil {bool}))))
+compute length (cons true (cons false nil))
 
 //Fixpoint app (A:Type) l1 l2 :=
 //  match l1 with
@@ -320,9 +319,9 @@ theorem bool_ext :
 proof
   assume P Hp b
   refine bool_ind (λz, P z) _ _ _               
-  apply and_elim_left _ (P false)
+  apply conj_elim_left _ (P false)
   refine Hp
-  apply and_elim_right (P true) _
+  apply conj_elim_right (P true) _
   apply Hp
 qed
 
@@ -364,7 +363,7 @@ qed
 theorem discr : π (eq {bool} false true) ⇒ π ⊥                             //  @TODO_4_admit
 proof
   assume H
-  apply not_elim (eq {bool} false true)
+  apply neg_elim (eq {bool} false true)
   // Case π (¬ (eq false true))
   //assume Hbis
   // Case π (eq false true)
@@ -381,7 +380,7 @@ proof
   // Case b1 = true                                            
   simpl
   apply imp_intro assume H
-  apply and_intro
+  apply conj_intro
   reflexivity
   apply H
   // Case b1 = false
@@ -408,18 +407,18 @@ proof
                            (eq (andb z b2) true)) _ _ _
   // Case b1 = true
   simpl
-  apply and_intro
-    apply imp_intro assume H apply and_intro
+  apply conj_intro
+    apply imp_intro assume H apply conj_intro
       reflexivity
       apply H
-    apply imp_intro assume H apply and_elim_right (eq {bool} true true) apply H
+    apply imp_intro assume H apply conj_elim_right (eq {bool} true true) apply H
   // Case b1 = false
   simpl
-  apply and_intro
+  apply conj_intro
     apply imp_intro assume H
       apply false_elim (eq {bool} false true ∧ eq {bool} b2 true)
       apply discr apply H
-  apply imp_intro assume H apply and_elim_left _ (eq {bool} b2 true) apply H
+  apply imp_intro assume H apply conj_elim_left _ (eq {bool} b2 true) apply H
 qed
 
 theorem orb_true_iff : ∀b1 b2, π ((eq {bool} (orb b1 b2) true) ⇔ (eq {bool} b1 true ∨ eq {bool} b2 true))
@@ -431,14 +430,14 @@ proof
                            (eq (orb z b2) true)) _ _ _
   // Case b1 = true
   simpl
-  apply and_intro
-    apply imp_intro assume H apply or_intro_left apply H
+  apply conj_intro
+    apply imp_intro assume H apply disj_intro_left apply H
     apply imp_intro assume H reflexivity
   // Case b1 = false
   simpl
-  apply and_intro
-    apply imp_intro assume H apply or_intro_right apply H
-    apply imp_intro assume H apply or_elim (eq {bool} false true) (eq {bool} b2 true) (eq {bool} b2 true) apply H
+  apply conj_intro
+    apply imp_intro assume H apply disj_intro_right apply H
+    apply imp_intro assume H apply disj_elim (eq {bool} false true) (eq {bool} b2 true) (eq {bool} b2 true) apply H
       assume Hfalse apply false_elim (eq {bool} b2 true) apply discr apply Hfalse
       assume H2 apply H2
 qed
@@ -714,52 +713,52 @@ theorem impl_and : ∀P Q R : Prop, (π P ⇒ π Q ⇒ π R) ⇒ (π(P ∧ Q) �
 proof
   assume P Q R Himp Hand
   apply Himp
-  apply and_elim_left P Q
+  apply conj_elim_left P Q
   apply Hand
-  apply and_elim_right P Q
+  apply conj_elim_right P Q
   apply Hand     
 qed
 
-//Lemma and_impl : forall P Q R : Prop, (P /\ Q -> R) -> (P -> Q -> R).
+//Lemma conj_impl : forall P Q R : Prop, (P /\ Q -> R) -> (P -> Q -> R).
 //Proof.
 //intros P Q R Hyp1 H1 H2.
 //apply Hyp1.
 //split ; assumption.
 //Qed.
-theorem and_impl_fl : ∀P Q R : Prop, (π (P ∧ Q) ⇒ π R) ⇒ (π P ⇒ π Q ⇒ π R)
+theorem conj_impl_fl : ∀P Q R : Prop, (π (P ∧ Q) ⇒ π R) ⇒ (π P ⇒ π Q ⇒ π R)
 proof
   assume P Q R Hand HP HQ
   apply Hand
-  apply and_intro
+  apply conj_intro
   apply HP
   apply HQ 
 qed
-theorem and_impl : ∀P Q R : Prop, π (imp (imp (P ∧ Q) R) (imp P (imp Q R)))
+theorem conj_impl : ∀P Q R : Prop, π (imp (imp (P ∧ Q) R) (imp P (imp Q R)))
 proof
   assume P Q R
   apply imp_intro assume Hand
   apply imp_intro assume P
   apply imp_intro assume Q                     
-  //apply and_intro P Q
+  //apply conj_intro P Q
   //apply HP
   //apply HQ 
 admit // @TODO_7 problème ?
       
-//Lemma and_impl_iff : forall P Q R : Prop, (P /\ Q -> R) <-> (P -> Q -> R).
+//Lemma conj_impl_iff : forall P Q R : Prop, (P /\ Q -> R) <-> (P -> Q -> R).
 //Proof.
 //split.
-//+ apply and_impl.
+//+ apply conj_impl.
 //+ apply impl_and.
 //Qed.
-theorem and_impl_iff : ∀P Q R : Prop,
+theorem conj_impl_iff : ∀P Q R : Prop,
 π ((imp (P ∧ Q) R) ⇔ (imp P (imp Q R)))  
 proof
   assume P Q R
-  apply and_intro
+  apply conj_intro
   simpl
   //apply imp_intro
   //rewrite imp_intro
-  apply and_impl
+  apply conj_impl
   apply impl_and P Q
 admit // @TODO_8 problème ?
 
@@ -774,9 +773,9 @@ admit // @TODO_8 problème ?
 theorem impl_not : ∀P : Prop, π P ⇒ π (¬ (¬ P))
 proof
   assume P HP
-  apply not_intro (¬ P)
+  apply neg_intro (¬ P)
   assume HnotP
-  apply not_elim P
+  apply neg_elim P
   apply HnotP
   apply HP
 qed
@@ -795,22 +794,22 @@ proof
 qed
 
 //(* en utilisant [modus_ponens] *)
-//Lemma impl_not_bis : forall P : Prop, P -> ~ ~ P.
+//Lemma impl_neg_bis : forall P : Prop, P -> ~ ~ P.
 //Proof.
 //intro P. unfold not.
 //apply modus_ponens.
 //Qed.
-theorem impl_not_bis : ∀P : Prop, π P ⇒ π (¬ (¬ P))
+theorem impl_neg_bis : ∀P : Prop, π P ⇒ π (¬ (¬ P))
 proof
   assume P HP                       // je n'ai pas utilisé modus_ponens...
-  apply not_intro (¬P)
+  apply neg_intro (¬P)
   assume HnotP
-  apply not_elim P
+  apply neg_elim P
     apply HnotP
     apply HP
-  //refine [π (¬ (¬ P))] not_intro (¬P)
-  //refine (λz, π P ⇒ π z) not_intro (¬P)
-  // rewrite not_intro (¬P)
+  //refine [π (¬ (¬ P))] neg_intro (¬P)
+  //refine (λz, π P ⇒ π z) neg_intro (¬P)
+  // rewrite neg_intro (¬P)
   //rewrite (¬ (¬ P)) as H
   //                     ((P ⇒ ⊥) ⇒ ⊥)
   //apply modus_ponens P ⊥
@@ -830,35 +829,35 @@ qed
 theorem P_notP_contradiction : ∀P : Prop, π (¬(P ∧ ¬P))
 proof
   assume P
-  apply not_intro (P ∧ ¬P)
+  apply neg_intro (P ∧ ¬P)
   assume Hand
-  apply not_elim P
-     apply and_elim_right P _   apply Hand
-     apply and_elim_left _ (¬P) apply Hand
+  apply neg_elim P
+     apply conj_elim_right P _   apply Hand
+     apply conj_elim_left _ (¬P) apply Hand
 qed
 
-//Lemma not_and : forall P Q : Prop, P \/ Q -> ~(~ P /\ ~Q).
+//Lemma neg_and : forall P Q : Prop, P \/ Q -> ~(~ P /\ ~Q).
 //Proof.
 //Admitted.
-theorem not_and : ∀P Q : Prop, π (P ∨ Q) ⇒ π (¬(¬P ∧ ¬Q))
+theorem neg_and : ∀P Q : Prop, π (P ∨ Q) ⇒ π (¬(¬P ∧ ¬Q))
 proof
   assume P Q Hor
-  apply not_intro (¬P ∧ ¬Q)
+  apply neg_intro (¬P ∧ ¬Q)
   assume Hand
-  refine or_elim P Q ⊥ _ _ _
+  refine disj_elim P Q ⊥ _ _ _
   // Case π (P ∨ Q)
   apply Hor
   // Case π P ⇒ π ⊥
-  assume HP apply not_elim P
-      refine and_elim_left (¬P) (¬Q) _ apply Hand
+  assume HP apply neg_elim P
+      refine conj_elim_left (¬P) (¬Q) _ apply Hand
       apply HP
   // Case π Q ⇒ π ⊥
-  assume HQ apply not_elim Q
-     refine and_elim_right (¬P) (¬Q) _ apply Hand
+  assume HQ apply neg_elim Q
+     refine conj_elim_right (¬P) (¬Q) _ apply Hand
      apply HQ
 qed
 
-//Lemma exists_not_forall : forall P : nat -> Prop, 
+//Lemma exists_neg_forall : forall P : nat -> Prop, 
 //(exists n, P n) ->  ~(forall n,~ (P n)).
 //Proof.
 //intros P H H1. 
@@ -867,7 +866,7 @@ qed
 //contradiction.
 //Qed.
 //\pi(\not(forall (\lambda m, \not(p m)))
-// theorem exists_not_forall :∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(all(λm:τ nat, ¬ (P m))))
+// theorem exists_neg_forall :∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(all(λm:τ nat, ¬ (P m))))
 // proof
 // qed
 //@TODO_
@@ -994,11 +993,11 @@ admit
 //Qed.
 //(** Prouver les lemmes suivants. *)
 //
-//Lemma even_n_or_Sn : forall n, even n \/ even (S n).
+//Lemma even_n_disj_Sn : forall n, even n \/ even (S n).
 //Proof.
 //Admitted.
 //
-//Lemma even_n_not_Sn : forall n, even n -> ~ even (S n).
+//Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
 //Proof.
 //Admitted.
 //

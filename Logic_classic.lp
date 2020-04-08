@@ -2,20 +2,17 @@ require open amelie.notation
 require open amelie.Logic
 
 // Excluded middle
-constant symbol excl_mid : ∀ (p : Prop), π (p ∨ (¬ p))
+constant symbol excl_mid p : π (p ∨ (¬ p))
 
-
-
-
-theorem not_elimp : ∀ (A : Prop), π (¬ (¬ A)) ⇒ π A
+theorem neg_elimp p : π (¬ (¬ p)) ⇒ π p
 proof
-    assume A nnp
-    refine or_elim A (¬ A) A _ _ _
-    refine excl_mid A
+    assume p nnp
+    refine disj_elim p (¬p) p _ _ _
+    refine excl_mid p
     assume pa
     refine pa
     assume pna
     apply false_elim
-    apply not_elim (¬A) nnp
+    apply neg_elim (¬p) nnp
     apply pna
 qed

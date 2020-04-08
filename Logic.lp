@@ -1,18 +1,18 @@
 require open amelie.notation
 
 // Conjunction
-constant symbol {|and|} : Prop ⇒ Prop ⇒ Prop
-set infix left 7 "∧" ≔ {|and|}
-constant symbol and_intro p q : π p ⇒ π q ⇒ π (p ∧ q)
-symbol and_elim_left p q  : π (p ∧ q) ⇒ π p
-symbol and_elim_right p q : π (p ∧ q) ⇒ π q
+constant symbol conj : Prop ⇒ Prop ⇒ Prop
+set infix left 7 "∧" ≔ conj
+constant symbol conj_intro p q : π p ⇒ π q ⇒ π (p ∧ q)
+symbol conj_elim_left p q  : π (p ∧ q) ⇒ π p
+symbol conj_elim_right p q : π (p ∧ q) ⇒ π q
 
 // Disjunction
-constant symbol or : Prop ⇒ Prop ⇒ Prop
-set infix left 6 "∨" ≔ or
-constant symbol or_intro_left p q  : π p ⇒ π (p ∨ q)
-constant symbol or_intro_right p q : π q ⇒ π (p ∨ q)
-symbol or_elim p q r : π (p ∨ q) ⇒ (π p ⇒ π r) ⇒ (π q ⇒ π r) ⇒ π r
+constant symbol disj : Prop ⇒ Prop ⇒ Prop
+set infix left 6 "∨" ≔ disj
+constant symbol disj_intro_left p q  : π p ⇒ π (p ∨ q)
+constant symbol disj_intro_right p q : π q ⇒ π (p ∨ q)
+symbol disj_elim p q r : π (p ∨ q) ⇒ (π p ⇒ π r) ⇒ (π q ⇒ π r) ⇒ π r
 
 assert λx y z,x∨y∧z ≡ λx y z,x∨(y∧z) // check that propositions are parsed correctly
   
@@ -24,8 +24,8 @@ symbol false_elim p : π ⊥ ⇒ π p
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
-constant symbol not_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
-symbol not_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
+constant symbol neg_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
+symbol neg_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
 
 // Intro and Elimination of imp
 constant symbol imp : Prop ⇒ Prop ⇒ Prop
@@ -34,7 +34,7 @@ symbol imp_elim  p q : π (imp p q) ⇒ π p ⇒ π q
 
 // Universal quantification
 constant symbol all {a} : (τ a ⇒ Prop) ⇒ Prop
-rule π (@all &a &f) → ∀x:τ &a, π (&f x)
+rule π (all &f) → ∀x, π (&f x)
 
 // Existential quantification
 set declared "∃"
@@ -47,6 +47,6 @@ set builtin "all"   ≔ all
 set builtin "bot"   ≔ ⊥
 //set builtin "top"   ≔ top
 set builtin "imp"   ≔ imp
-set builtin "and"   ≔ {|and|}
-set builtin "or"    ≔ or
+set builtin "and"   ≔ conj
+set builtin "or"    ≔ disj
 set builtin "not"   ≔ ¬
