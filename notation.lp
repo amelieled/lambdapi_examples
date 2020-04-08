@@ -7,18 +7,16 @@ injective symbol π : Prop ⇒ TYPE // Interpretation of propositions in TYPE
 constant symbol Set : TYPE       // Type of set codes
 set declared "τ"
 injective symbol τ : Set ⇒ TYPE  // Interpretation of set codes in TYPE
-                      
+
 // Boolean type
 constant symbol bool : Set       // Type of booleans
-constant symbol B : TYPE
-rule τ bool       → B
+definition B ≔ τ bool
 constant symbol true : B
 constant symbol false : B
-                        
+
 // Nat type
 constant symbol nat  : Set       // Type of natural numbers
-constant symbol N : TYPE
-rule τ nat        → N
+definition N ≔ τ nat
 constant symbol O : N
 constant symbol S : N ⇒ N
 set builtin "0"  ≔ O             // Enabling builtin natural number literals
@@ -28,8 +26,7 @@ set builtin "+1" ≔ S
 constant symbol eq {a} : τ a ⇒ τ a ⇒ Prop
 set infix 1 "=" ≔ eq
 constant symbol eq_refl {a} (x:τ a) : π (x = x)
-constant symbol eq_ind {a} (x y:τ a) :
-                       π (x = y) ⇒ ∀P, π (P y) ⇒ π (P x)
+constant symbol eq_ind {a} (x y:τ a) : π (x = y) ⇒ ∀P, π (P y) ⇒ π (P x)
 
 // Set builtins for the rewrite tactic
 set builtin "P"     ≔ π
