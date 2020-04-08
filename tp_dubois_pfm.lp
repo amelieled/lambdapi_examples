@@ -35,12 +35,12 @@ rule agrandir departementale → nationale
  and agrandir autoroute      → autoroute
 
 // Eval compute in (agrandir (agrandir nationale)).
-compute (agrandir (agrandir nationale))                           
+compute agrandir (agrandir nationale)
 
 theorem agrandir_test : // version théorème 
-  π (eq {route} (agrandir (agrandir nationale)) autoroute)
+  π (agrandir (agrandir nationale) = autoroute)
 proof
-  refine eq_refl autoroute
+  reflexivity
 qed
 
 //Inductive terrain : Type :=
@@ -55,7 +55,7 @@ constant symbol t_route    : R ⇒ Ter
 constant symbol t_batiment : Ter
 
 //Check (t_route nationale).
-type (t_route nationale)
+type t_route nationale
 
 /////////////////////////////
 // Exercice 1.
@@ -69,15 +69,15 @@ type true
 //Print bool.
 // ??
 
-//Definition negb b :=
+//Definition not b :=
 //  match b with
 //  | true => false
 //  | false => true
 //  end.
 
-symbol negb : B ⇒ B
-rule negb true → false
- and negb false → true
+symbol not : B ⇒ B
+rule not true → false
+ and not false → true
 
 // Definition andb b1 b2 :=
 //  match b1 with
@@ -91,17 +91,17 @@ rule andb false _  → false
  and andb &b1 true → &b1
  and andb true &b2 → &b2
 
-// Definition orb b1 b2 :=
+// Definition or b1 b2 :=
 //   match b1 with
 //   | true => true
 //   | false => b2
 //   end.
 
-symbol orb : B ⇒ B ⇒ B
-rule orb true _  → true
- and orb _ true  → true
- and orb &b1 false → &b1
- and orb false &b2 → &b2
+symbol or : B ⇒ B ⇒ B
+rule or true _  → true
+ and or _ true  → true
+ and or &b1 false → &b1
+ and or false &b2 → &b2
 
 // /////////////////////// Entiers naturels
                   
@@ -128,12 +128,12 @@ type S
 //  end.
      
 symbol plus : N ⇒ N ⇒ N
-rule plus 0      &m → &m
- and plus (S &v) &m → S (plus &v &m)
 
 // Notation "n + m" := (plus n m).
-set declared "+"
 set infix right 6 "+" ≔ plus
+
+rule 0 + &m → &m
+ and S &v + &m → S (&v + &m)
 
 // Eval compute in (0 + 1).
 compute 0+1
@@ -177,8 +177,8 @@ type appb
 // ///////////////////////////////////// Suite booléen
      
 //Definition apply_neg (f : _ -> _ -> bool) b1 b2 :=
-//  f (negb b1) (negb b2).
-definition apply_neg (f: _ ⇒ _ ⇒ B) b1 b2 ≔ f (negb b1) (negb b2)
+//  f (not b1) (not b2).
+definition apply_neg (f: _ ⇒ _ ⇒ B) b1 b2 ≔ f (not b1) (not b2)
 
 // Check apply_neg.
 type apply_neg
@@ -191,12 +191,12 @@ definition nor : B ⇒ B ⇒ B  ≔ apply_neg andb    // non
 // Check nor.
 type nor
  
-// Definition norb := 
+// Definition nor := 
 //   apply_neg (fun b1 => fun b2 => b2).
-definition norb ≔ apply_neg (λb1, λb2, b2)
+//definition nor ≔ apply_neg (λb1 _, b2)
  
-// Eval compute in (norb true false).
-compute (norb true false)
+// Eval compute in (nor true false).
+compute nor true false
 
 // Definition idb : bool -> bool := fun b => b.
 definition idb : B ⇒ B ≔ λb, b
@@ -258,30 +258,30 @@ compute length (cons true (cons false nil))
 //  | nil _ => l2
 //  | cons _ a l => cons A a (app A l l2)
 //    end. 
-symbol app A : L A ⇒ L A ⇒ L A
-rule app _ (nil _) &l2        → &l2
- and app &A (cons {&A} &a &l) &l2 → cons {&A} &a (app &A &l &l2)
+symbol app {a} : L a ⇒ L a ⇒ L a
+rule app nil &l2        → &l2
+ and app (cons &x &l) &l2 → cons &x (app &l &l2)
 
 //Definition apply_neg_gen (A:Type) (f:_->_->A) b1 b2 :=
-//  f (negb b1) (negb b2).
+//  f (not b1) (not b2).
 definition apply_neg_gen A (f : _ ⇒ _ ⇒ A) b1 b2 ≔
-    f (negb b1) (negb b2)
+    f (not b1) (not b2)
 
 // Definition nor2 := apply_neg_gen bool  andb.
 // definition nor2 ≔ apply_neg_gen bool andb
 // @TODO_2 ( // @TODO_1)
 
 // Definition apply_neg_gen2 {A:Type} (f:_->_->A) b1 b2 :=
-//  f (negb b1) (negb b2).
+//  f (not b1) (not b2).
 definition apply_neg_gen2 {A} (f : _ ⇒ _ ⇒ A) b1 b2 ≔
-f (negb b1) (negb b2)
+f (not b1) (not b2)
 
 // Definition nor3 := apply_neg_gen2 andb.
 // definition nor3 ≔ apply_neg_gen andb
 // @TODO_3 ( // @TODO_1)
 
 // Definition toto (b1 b2 : bool) := 0. 
-definition toto (b1 b2 : B) ≔ 0
+definition toto (_b1 _b2 : B) ≔ 0
 
 // Eval compute in apply_neg_gen  nat toto true false.
 compute apply_neg_gen N toto true false
@@ -289,7 +289,7 @@ compute apply_neg_gen N toto true false
 // //////////////////////////////////////////// Logique sur les booléens
 
 require open amelie.Logic
-definition equiv (A B : Prop) ≔ (imp A B) ∧ (imp B A)
+definition equiv (p q : Prop) ≔ imp p q ∧ imp q p
 set infix left 7 "⇔" ≔ equiv
                        
 // Check True. (* True : Prop *)
@@ -300,7 +300,7 @@ type true // (* true : B *)
 
 // Lemma bool_trivial : forall (P : bool -> Prop) b, P b -> P b.
 // Admitted.
-theorem bool_trivial : ∀(P:B ⇒ Prop) b, π (P b) ⇒ π (P b)
+theorem bool_trivial : ∀p:B⇒Prop,∀b, π (p b) ⇒ π (p b)
 //π (imp (P b) (P b))
 // Note : Check (_ ⇒ _) donne TYPE ⇒ TYPE
 proof
@@ -309,13 +309,13 @@ proof
 qed
 
 // Induction principle on B.
-symbol bool_ind : ∀(P:B⇒Prop), π(P true) ⇒ π(P false) ⇒ ∀b, π(P b)
+symbol bool_ind : ∀p, π(p true) ⇒ π(p false) ⇒ ∀b, π(p b)
 
 //Lemma bool_ext : forall (P : bool -> Prop), P true /\ P false ->
 //  forall b, P b.
 //Admitted.
 theorem bool_ext :
-∀P : B ⇒ Prop, π ((P true) ∧ (P false)) ⇒ ∀b, π(P b)
+∀p, π (p true ∧ p false) ⇒ ∀b, π(p b)
 proof
   assume P Hp b
   refine bool_ind (λz, P z) _ _ _               
@@ -329,7 +329,7 @@ qed
 //  forall b, P b.
 //Admitted.
 theorem bool_ext2 :
-∀P : B ⇒ Prop, π (P true) ⇒ π (P false) ⇒ ∀b, π (P b)
+∀p, π (p true) ⇒ π (p false) ⇒ ∀b, π (p b)
 proof
   assume P HPT HPF b
   refine bool_ind (λz, P z) _ _ _
@@ -360,7 +360,7 @@ qed
 
 // symbol false_elim p : π ⊥ ⇒ π p
 
-theorem discr : π (eq {bool} false true) ⇒ π ⊥                             //  @TODO_4_admit
+theorem discr : π (false = true) ⇒ π ⊥                             //  @TODO_4_admit
 proof
   assume H
   apply neg_elim (eq {bool} false true)
@@ -373,10 +373,10 @@ admit
 //theorem andb_prop :                        // Il me manque un outil pour y arriver avec cet énoncé
 //∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))
-theorem andb_prop : ∀b1 b2, π (imp (eq {bool} (andb b1 b2) true) ((eq {bool} b1 true) ∧ (eq {bool} b2 true) ))
+theorem andb_prop b1 b2 : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
 proof
   assume b1 b2
-  refine bool_ind (λz, imp (eq {bool} (andb z b2) true) ((eq {bool} z true) ∧ (eq {bool} b2 true)) ) _ _ _
+  refine bool_ind (λz, imp (andb z b2 = true) ((z = true) ∧ (b2 = true))) _ _ _
   // Case b1 = true                                            
   simpl
   apply imp_intro assume H
@@ -395,10 +395,10 @@ qed
 /////////////////////////////////////
 //(*
 //   [andb_true_iff : forall b1 b2, andb b1 b2 = true <-> b1 = true /\ b2 = true]
-//    Montrer [orb_true_iff], un résultat similaire sur [orb].  
+//    Montrer [or_true_iff], un résultat similaire sur [or].  
 // *)
 
-theorem andb_true_iff : ∀b1 b2, π ((eq {bool} (andb b1 b2) true) ⇔ (eq {bool} b1 true ∧ eq {bool} b2 true))
+theorem andb_true_iff b1 b2 : π ((andb b1 b2 = true) ⇔ ((b1 = true) ∧ (b2 = true)))
 proof
   assume b1 b2
   refine bool_ind (λz, imp (eq (andb z b2) true)
@@ -421,13 +421,13 @@ proof
   apply imp_intro assume H apply conj_elim_left _ (eq {bool} b2 true) apply H
 qed
 
-theorem orb_true_iff : ∀b1 b2, π ((eq {bool} (orb b1 b2) true) ⇔ (eq {bool} b1 true ∨ eq {bool} b2 true))
+theorem or_true_iff b1 b2 : π ((eq {bool} (or b1 b2) true) ⇔ (eq {bool} b1 true ∨ eq {bool} b2 true))
 proof
   assume b1 b2
-  refine bool_ind (λz, imp (eq (orb z b2) true)
+  refine bool_ind (λz, imp (eq (or z b2) true)
                            (eq z true ∨ eq b2 true) ∧
                        imp (eq z true ∨ eq b2 true)
-                           (eq (orb z b2) true)) _ _ _
+                           (eq (or z b2) true)) _ _ _
   // Case b1 = true
   simpl
   apply conj_intro
