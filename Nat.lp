@@ -1,4 +1,4 @@
-require open tests.preuves_Ledein.notation
+require open amelie.notation
 
 // Induction principle
 symbol nat_ind P : π (P 0) ⇒ (∀x, π (P x) ⇒ π (P (S x))) ⇒ ∀x, π (P x)

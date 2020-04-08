@@ -1,5 +1,5 @@
-require open tests.preuves_Ledein.notation
-require open tests.preuves_Ledein.Logic
+require open amelie.notation
+require open amelie.Logic
 
 // Excluded middle
 constant symbol excl_mid : ∀ (p : Prop), π (p ∨ (¬ p))

@@ -1,5 +1,5 @@
-require open tests.preuves_Ledein.Bool
-require open tests.preuves_Ledein.Nat
+require open amelie.Bool
+require open amelie.Nat
 
 // Boolean equality on N
 symbol beq : N ⇒ N ⇒ B

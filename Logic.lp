@@ -1,4 +1,4 @@
-require open tests.preuves_Ledein.notation
+require open amelie.notation
 
 // Conjunction
 constant symbol {|and|} : Prop ⇒ Prop ⇒ Prop

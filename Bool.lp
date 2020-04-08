@@ -1,4 +1,4 @@
-require open tests.preuves_Ledein.notation
+require open amelie.notation
 
 // Induction principle on B.
 symbol bool_ind : ∀ (P:B⇒Prop), π(P true) ⇒ π(P false) ⇒ ∀b, π(P b)

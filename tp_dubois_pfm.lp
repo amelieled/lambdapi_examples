@@ -5,7 +5,7 @@
 // Tout ce qui est en commentaire est du Coq qui compile.
 // Ma traduction vers LP suit.
 
-require open tests.preuves_Ledein.notation
+require open amelie.notation
                                   
 ////////////////////////////////////
 // Avant de prendre la route...
@@ -206,7 +206,7 @@ definition idb : B ⇒ B ≔ λb, b
 definition idb_bis b:B ≔ b
                              
 //Definition my_first := apply_neg (fun b1 => fun b2 => b1).
-definition my_first ≔ apply_neg (λb1, λb2, b1)
+definition my_first ≔ apply_neg (λb1 _b2, b1)
                          
 //Eval compute in (my_first true false).
 compute (my_first true false)
@@ -289,7 +289,7 @@ compute apply_neg_gen N toto true false
                                        
 // //////////////////////////////////////////// Logique sur les booléens
 
-require open tests.preuves_Ledein.Logic
+require open amelie.Logic
 definition equiv (A B : Prop) ≔ (imp A B) ∧ (imp B A)
 set infix left 7 "⇔" ≔ equiv
                        

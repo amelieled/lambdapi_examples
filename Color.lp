@@ -1,7 +1,7 @@
 // Inspiré de Software_Foundations/lf/Basics.html
-require open tests.preuves_Ledein.notation
-require open tests.preuves_Ledein.Bool
-require open tests.preuves_Ledein.Logic
+require open amelie.notation
+require open amelie.Bool
+require open amelie.Logic
 
 ///////////////////////////////////////
 // Definitions of type
