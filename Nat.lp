@@ -1,7 +1,8 @@
 require open amelie.notation
+require open amelie.Logic
 
 // Induction principle
-symbol nat_ind P : π (P 0) ⇒ (∀x, π (P x) ⇒ π (P (S x))) ⇒ ∀x, π (P x)
+symbol nat_ind p : π (p 0) ⇒ (∀x, π (p x) ⇒ π (p (S x))) ⇒ ∀x, π (p x)
 rule nat_ind _  &u _  O      → &u
  and nat_ind &p &u &v (S &n) → &v &n (nat_ind &p &u &v &n)
 
@@ -15,7 +16,7 @@ rule   0  + &y → &y            // les autres règles en découlent
  and S &x + &y → S (&x + &y)
 
 // Addition is commutative
-theorem add0r x : π (eq {nat} (x + 0) x)
+theorem add0r x : π (x + 0 = x)
 proof
   refine nat_ind _ _ _
   // case x = 0
