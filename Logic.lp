@@ -4,13 +4,13 @@ require open amelie.notation
 constant symbol conj : Prop ⇒ Prop ⇒ Prop
 set infix left 7 "∧" ≔ conj
 constant symbol conj_intro p q : π p ⇒ π q ⇒ π (p ∧ q)
-symbol conj_elim_left p q  : π (p ∧ q) ⇒ π p
+symbol conj_elim_left  p q : π (p ∧ q) ⇒ π p
 symbol conj_elim_right p q : π (p ∧ q) ⇒ π q
 
 // Disjunction
 constant symbol disj : Prop ⇒ Prop ⇒ Prop
 set infix left 6 "∨" ≔ disj
-constant symbol disj_intro_left p q  : π p ⇒ π (p ∨ q)
+constant symbol disj_intro_left  p q : π p ⇒ π (p ∨ q)
 constant symbol disj_intro_right p q : π q ⇒ π (p ∨ q)
 symbol disj_elim p q r : π (p ∨ q) ⇒ (π p ⇒ π r) ⇒ (π q ⇒ π r) ⇒ π r
 
@@ -21,6 +21,10 @@ set declared "⊥"
 constant symbol ⊥ : Prop
 symbol false_elim p : π ⊥ ⇒ π p
 
+// True
+set declared "⊤"
+constant symbol ⊤ : Prop
+                    
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
