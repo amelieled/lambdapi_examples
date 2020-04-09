@@ -7,7 +7,7 @@ constant symbol conj_intro p q : π p ⇒ π q ⇒ π (p ∧ q)
 symbol conj_elim_left p q  : π (p ∧ q) ⇒ π p
 symbol conj_elim_right p q : π (p ∧ q) ⇒ π q
 
-assert p q r ⊢ p ∧ q ∧ r ≡ p ∧ (q ∧ r)
+// assert p q r ⊢ p ∧ q ∧ r ≡ p ∧ (q ∧ r)
 
 // Disjunction
 constant symbol disj : Prop ⇒ Prop ⇒ Prop
@@ -16,13 +16,17 @@ constant symbol disj_intro_left p q  : π p ⇒ π (p ∨ q)
 constant symbol disj_intro_right p q : π q ⇒ π (p ∨ q)
 symbol disj_elim p q r : π (p ∨ q) ⇒ (π p ⇒ π r) ⇒ (π q ⇒ π r) ⇒ π r
 
-assert p q r ⊢ p ∨ q ∧ r ≡ p ∨ (q ∧ r) // check that propositions are parsed correctly
+// assert p q r ⊢ p ∨ q ∧ r ≡ p ∨ (q ∧ r) // check that propositions are parsed correctly
   
 // False
 set declared "⊥"
 constant symbol ⊥ : Prop
 symbol false_elim p : π ⊥ ⇒ π p
 
+// True
+set declared "⊤"
+constant symbol ⊤ : Prop
+                    
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
@@ -30,7 +34,7 @@ constant symbol ¬ : Prop ⇒ Prop
 //symbol neg_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
 rule π (¬ &p) → π &p ⇒ π ⊥
 
-assert p q ⊢ ¬ p ∧ q ≡ (¬ p) ∧ q
+// assert p q ⊢ ¬ p ∧ q ≡ (¬ p) ∧ q
 
 // Intro and Elimination of imp
 constant symbol imp : Prop ⇒ Prop ⇒ Prop
@@ -39,9 +43,9 @@ set infix right 5 "⊃" ≔ imp
 //symbol imp_elim  p q : π (imp p q) ⇒ π p ⇒ π q
 rule π (&p ⊃ &q) → π &p ⇒ π &q
 
-assert p q r s ⊢ p ∧ q ⊃ r ∨ s ≡ (p ∧ q) ⊃ (r ∨ s)
+// assert p q r s ⊢ p ∧ q ⊃ r ∨ s ≡ (p ∧ q) ⊃ (r ∨ s)
 
-assert a (x y : τ a) ⊢ x = y ∧ x = y ⊃ x = y ∨ x = y ≡ (x = y ∧ x = y) ⊃ (x = y ∨ x = y)
+// assert a (x y : τ a) ⊢ x = y ∧ x = y ⊃ x = y ∨ x = y ≡ (x = y ∧ x = y) ⊃ (x = y ∨ x = y)
 
 // Universal quantification
 constant symbol forall {a} : (τ a ⇒ Prop) ⇒ Prop
