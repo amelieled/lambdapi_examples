@@ -812,12 +812,12 @@ proof
   apply Hor
   // Case π P ⇒ π ⊥
   assume HP
-      refine conj_elim_left (¬P) (¬Q) _ apply Hand
-      apply HP
+      //refine conj_elim_left (¬P) (¬Q) _ apply Hand
+      //apply HP
   // Case π Q ⇒ π ⊥
   //assume HQ apply neg_elim Q
-     refine conj_elim_right (¬P) (¬Q) _ apply Hand
-     apply HQ
+     //refine conj_elim_right (¬P) (¬Q) _ apply Hand
+     //apply HQ
 admit // @TODO 4
 
 //Lemma exists_neg_forall : forall P : nat -> Prop, 
@@ -915,17 +915,17 @@ constant symbol even_SS_coq n : π (even n) ⇒ π (even (S (S n)))
 //Proof.
 //apply even_SS. apply even_SS. apply even_0.
 //Qed.
-theorem even_4 : π (even 4)
-proof
-  apply imp_elim (even (S (S O))) apply even_SS (S (S O))
-  apply imp_elim (even  O) apply even_SS O
-  apply even_0
-qed
+// theorem even_4 : π (even 4)
+// proof
+//   apply imp_elim (even  (S (S O))) apply even_SS (S (S O))
+//   apply imp_elim (even  O) apply even_SS O
+//   apply even_0
+// qed
 theorem even_4_coq : π (even 4)
 proof
   apply even_SS_coq (S (S O)) apply even_SS_coq O apply even_0
 qed
-// ↦   ↪
+
 //                             ou avec une syntaxe fonctionnelle
 //Theorem even_4' : even 4.
 //Proof. exact (even_SS 2 (even_SS 0 even_0)).
@@ -943,11 +943,9 @@ qed
 //theorem even_plus4 : π (all (λn:N) (imp (even n) (even (plus 4 n))))
 theorem even_plus4 : ∀n, π (imp (even n) (even (plus 4 n)))
 proof
-  assume n
-  simpl
-  apply imp_intro assume Heven
-  apply imp_elim (even (S (S n))) apply even_SS (S (S n))
-  apply imp_elim (even  n) apply even_SS n
+  assume n Heven
+  apply even_SS_coq (S (S n))
+  apply even_SS_coq n
   apply Heven
 qed
 
@@ -965,9 +963,9 @@ rule pred 0      → 0
                    
 theorem ev_minus2 : ∀n, π (imp (even n) (even (pred (pred n))))
 proof
-  assume n apply imp_intro assume Heven
+  assume n assume Heven
                                   
-qed
+admit
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
