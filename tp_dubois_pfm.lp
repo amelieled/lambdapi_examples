@@ -987,7 +987,10 @@ admit
 //  inversion H1.
 //  inversion H3.
 //Qed.
-//
+theorem even5_nonsense : π (even 5) ⇒ π ((plus 2 2) = 9)
+proof
+admit
+
 //Lemma ev_even : forall n,
 //  even n -> exists k, n = 2 * k.
 //Proof.
@@ -1004,21 +1007,34 @@ admit
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
+theorem ev_even : ∀n, π (even n) ⇒ π (∃ (λk:τ nat, n = 2*k))
+proof
+admit
+
 //(** Prouver les lemmes suivants. *)
 //
 //Lemma even_n_disj_Sn : forall n, even n \/ even (S n).
 //Proof.
 //Admitted.
-//
+theorem even_n_disj_Sn : ∀n, π (even n ∨ even (S n))
+proof
+admit
+
 //Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
 //Proof.
 //Admitted.
-//
+theorem even_n_neg_Sn : ∀n, π (even n) ⇒ π (¬ (even (S n)))
+proof
+admit
+
 //Lemma even_dec : forall n, even n \/ ~ even n.
 //Proof.
 //Admitted.
-//
-//(** Induction de 2 en 2. *)
+theorem even_dec : ∀n, π (even n ∨ ¬(even (S n)))
+proof
+admit
+
+//  Induction de 2 en 2.
 //Lemma two_steps_induction : forall P : nat -> Prop, P 0 -> P 1 ->
 //  (forall n, P n -> P (S (S n))) ->
 //  forall n, P n.
@@ -1026,9 +1042,13 @@ admit
 //  intros P H0 H1 IHn.
 //  assert (forall n, P n /\ P (S n)) as Hn.
 //Admitted.
-//
-//(** Définir [evenb : nat -> bool] qui teste si un entier est pair. *)
-//
+theorem two_steps_induction :
+∀(p : N ⇒ Prop), π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
+proof
+admit
+
+// Définir [evenb : nat -> bool] qui teste si un entier est pair.
+
 //Fixpoint evenb (n:nat) : bool.
 //Admitted.
 //
