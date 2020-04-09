@@ -626,7 +626,7 @@ proof
     reflexivity
 qed
 
-//* Prouver directement *)
+// Prouver directement
 //Lemma mult_plus_distr_l : forall n m p,
 //  n*(m+p)=n*m+n*p.
 //Proof.
@@ -664,9 +664,8 @@ proof
 //qed // @TODO_2
 admit
 
-// 
-//(* Prouver en utilisant les lemmes precedents
-//   (mais bien sur pas [mult_plus_distr_l]) *)
+//  Prouver en utilisant les lemmes précédents
+//  (mais bien sûr pas [mult_plus_distr_l])
 //Lemma mult_plus_distr_l_bis : forall n m p,
 //  n*(m+p)=n*m+n*p.
 //Proof.
@@ -769,7 +768,7 @@ proof
   apply HP
 qed
 
-//(* en utilisant [modus_ponens] *)
+// en utilisant [modus_ponens]
 //Lemma impl_neg_bis : forall P : Prop, P -> ~ ~ P.
 //Proof.
 //intro P. unfold not.
@@ -781,7 +780,7 @@ proof
   refine modus_ponens P ⊥
 qed
 
-//(* à partir de [impl_not] *)
+// à partir de [impl_not] 
 //Lemma P_notP_contradiction : forall P : Prop, ~ (P /\ ~ P).
 //Proof.
 //intro P.
@@ -829,11 +828,11 @@ admit // @TODO 4
 //contradiction.
 //Qed.
 //\pi(\not(forall (\lambda m, \not(p m)))
-// theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall(λm:τ nat, ¬ (P m))))
-// proof
+theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall(λm:τ nat, ¬ (P m))))
+proof
 //   assume P H1 H2
 //   apply H2
-// qed
+qed
 //@TODO 5
 
 ////////////////////////
@@ -843,7 +842,7 @@ admit // @TODO 4
 //Check list.
 type list
 
-// Notation "[]" := nil.
+// Notation "[]" := nil. //@TODO 6
 // set declared "[]"
 // rule [] → nil
 
@@ -852,24 +851,24 @@ type list
 //Notation "[ x ; y ; .. ; z ]" := (cons x (cons y .. (cons z nil) ..)).
 // possible ?
 
-//(* Montrer que le nombre d'éléments de la concaténation de deux listes est la somme
-//	des nombres des éléments de chacune *)
+//  Montrer que le nombre d'éléments de la concaténation de deux listes est la somme
+//  des nombres des éléments de chacune.
 
 theorem sum_length : ∀A (l1 l2 : L A), π (eq {nat} (plus (length l1) (length l2)) (length (app l1 l2)))
 proof
   assume A l1 l2
   
-admit
+admit //@TODO 7
 
-//(* Definir la fonction qui renverse une liste (on utilisera la fonction précédente app)
-// et  montrer que reverse(reverse l) = l pour tout l, par induction sur l*)
-// symbol reverse {A} : L A
-// rule reverse nil          → nil
-//  and reverse (cons &v &q) → app (reverse &q) (cons &v nil)
+// Définir la fonction qui renverse une liste (on utilisera la fonction précédente app)
+// et  montrer que reverse(reverse l) = l pour tout l, par induction sur l
+symbol reverse {A} : L A ⇒ L A
+rule reverse nil          → nil
+ and reverse (cons &v &q) → app (reverse &q) (cons &v nil)
 
-// theorem fixpoint_reverse : ∀l, reverse(reverse l) = l
-// proof
-// qed
+theorem fixpoint_reverse : ∀A (l:L A), π (reverse (reverse l) = l)
+proof
+admit//@TODO 8
 
 //////////////////////////
 //  Exercice 5 - Prédicat inductif
@@ -977,7 +976,7 @@ theorem ev_minus2 : ∀n, π (imp (even n) (even (pred (pred n))))
 proof
   assume n assume Heven
                                   
-admit
+admit//@TODO 9
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
@@ -989,7 +988,7 @@ admit
 //Qed.
 theorem even5_nonsense : π (even 5) ⇒ π ((plus 2 2) = 9)
 proof
-admit
+admit //@TODO 10
 
 //Lemma ev_even : forall n,
 //  even n -> exists k, n = 2 * k.
@@ -1007,32 +1006,32 @@ admit
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
-theorem ev_even : ∀n, π (even n) ⇒ π (∃ (λk:τ nat, n = 2*k))
+theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = 2*k))
 proof
-admit
+admit //@TODO 11
 
-//(** Prouver les lemmes suivants. *)
-//
+//  Prouver les lemmes suivants.
+
 //Lemma even_n_disj_Sn : forall n, even n \/ even (S n).
 //Proof.
 //Admitted.
 theorem even_n_disj_Sn : ∀n, π (even n ∨ even (S n))
 proof
-admit
+admit //@TODO 12
 
 //Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
 //Proof.
 //Admitted.
 theorem even_n_neg_Sn : ∀n, π (even n) ⇒ π (¬ (even (S n)))
 proof
-admit
+admit //@TODO 13
 
 //Lemma even_dec : forall n, even n \/ ~ even n.
 //Proof.
 //Admitted.
 theorem even_dec : ∀n, π (even n ∨ ¬(even (S n)))
 proof
-admit
+admit //@TODO 14
 
 //  Induction de 2 en 2.
 //Lemma two_steps_induction : forall P : nat -> Prop, P 0 -> P 1 ->
@@ -1045,39 +1044,47 @@ admit
 theorem two_steps_induction :
 ∀(p : N ⇒ Prop), π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
 proof
-admit
+admit //@TODO 15
 
 // Définir [evenb : nat -> bool] qui teste si un entier est pair.
 
 //Fixpoint evenb (n:nat) : bool.
 //Admitted.
-//
-//(** Prouver les lemmes suivants. Si vous avez besoin de résultats sur les
+symbol evenb : N ⇒ B//@TODO 16
+
+//    Prouver les lemmes suivants. Si vous avez besoin de résultats sur les
 //    booléens, vous pouvez les trouver dans [Bool]
 //    (utiliser [Require Import Bool.]).
-//*)
-//
+
 //Lemma evenb_correct : forall n, evenb n = true -> even n.
 //Proof.
 //Admitted.
-//
+theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
+proof
+admit //@TODO 17
+
 //Lemma evenb_complete : forall n, even n -> evenb n = true.
 //Proof.
 //Admitted.
-//
+theorem evenb_complte : ∀n, π (even n) ⇒  π (evenb n = true)
+proof
+admit //@TODO 18
+                   
 //Definition evenb_spec : forall n, evenb n = true <-> even n.
 //Proof.
 //Admitted.
-//
-//(** Prouver [even_dec_bis : forall n, even n \/ ~ even n]
-//    en utilisant [evenb_spec]. *)
-//
+theorem evenb_spec : ∀n, π (evenb n = true ⇔ even n)
+proof
+admit //@TODO 19
+
+// Prouver [even_dec_bis : forall n, even n \/ ~ even n] en utilisant [evenb_spec].
+
 //Lemma even_dec_bis : forall n, even n \/ ~ even n.
 //Proof.
 //Admitted.
 theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
 proof
-admit
+admit //@TODO 20
 
 /////////////////////////////////
 // Exercice 6 - Dernier retour sur les listes
@@ -1085,7 +1092,7 @@ admit
 
 //Variable A : Type.
 //
-//Inductive mem : A -> list A -> Prop :=
+//Inductive mem : A -> list A -> Prop :=             //@TODO 21
 //  mem_head : forall x l, mem x (cons x l)
 //| mem_tail : forall x y l, 
 //   mem x l -> mem x (cons y l).
@@ -1096,6 +1103,7 @@ constant symbol mem_tail x y l : π (imp (mem x l) (mem x (cons y l)))
 // definition L a ≔ τ (list a)
 // constant symbol nil {a} : L a
 // constant symbol cons {a} : τ a ⇒ L a ⇒ L a
+
 // Check app.
 type app
      
@@ -1107,11 +1115,11 @@ type app
 //Admitted.
 theorem app_left : ∀l1 l2 x, π ((mem x l1) (mem x (app l1 l2)))
 proof
-admit
+admit //@TODO 22
 
 //Lemma app_or : forall l1 l2 x, mem x (app l1 l2) -> mem x l1 \/ mem x l2.
 //Proof.
 //Admitted.
 theorem app_or : ∀l1 l2 x, π ((mem x (app l1 l2)) ((mem x l1) ∨ (mem x l2)))
 proof
-admit
+admit //@TODO 23
