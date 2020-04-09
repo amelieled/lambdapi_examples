@@ -20,7 +20,7 @@ constant symbol blue  : RGB
 
 // Induction principle on RGB.
 symbol rgb_ind :
-   ∀ (P:RGB⇒Prop), π (P red) ⇒ π (P green) ⇒ π (P blue) ⇒ ∀rgb:RGB, π (P rgb)
+   ∀p, π (p red) ⇒ π (p green) ⇒ π (p blue) ⇒ ∀c, π (p c)
 
 
 //Inductive color : Type :=
@@ -35,7 +35,7 @@ constant symbol white : C
 constant symbol primary : RGB ⇒ C
 
 // Induction principle on C.
-symbol coldisj_ind : ∀ (P:C⇒Prop), π (P black) ⇒ π (P white) ⇒ (∀n, π (P (primary n))) ⇒ ∀c:C, π (P c)
+symbol coldisj_ind : ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary n))) ⇒ ∀c, π (p c)
 
 
 //////////////////////////////////////////
@@ -101,9 +101,10 @@ rule isblue black       → false
 // Some properties
 ////////////////////////////////////
 
-theorem left_rgb : ∀(n:RGB),
-π (imp (eq {bool} (monochrome (primary n)) false)
-       ((eq {bool} (isred (primary n)) true ∨ eq {bool} (isgreen (primary n)) true) ∨ eq {bool} (isblue (primary n)) true))
+assert p q r s ⊢ ∀n, π (p ⊃ q ∨ r ∨ s)
+
+theorem left_rgb : ∀n,
+π (monochrome (primary n) = false ⊃ isred (primary n) = true ∨ isgreen (primary n) = true ∨ isblue (primary n) = true)
 proof
   assume c
   refine rgb_ind (λz, imp (eq {bool} (monochrome (primary z)) false)
@@ -115,18 +116,12 @@ qed
 theorem in_red_rgb : ∀z, π (imp (eq {bool} (isred (primary z)) true) (eq {bool} (monochrome (primary z)) false))
 proof
   refine rgb_ind (λz, imp (eq {bool} (isred (primary z)) true) (eq {bool} (monochrome (primary z)) false)) ?CR ?CG ?CB
-  apply imp_intro
-  simpl
   assume Hred
   reflexivity   
   //
-  apply imp_intro
-  simpl
   assume Hred
   reflexivity   
   //
-  apply imp_intro
-  simpl
   assume Hred
   reflexivity   
 qed

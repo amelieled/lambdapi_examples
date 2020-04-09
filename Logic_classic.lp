@@ -13,6 +13,6 @@ proof
     refine pa
     assume pna
     apply false_elim
-    apply neg_elim (¬p) nnp
-    apply pna
+    apply nnp
+    refine pna
 qed
