@@ -829,8 +829,10 @@ admit // @TODO 4
 //contradiction.
 //Qed.
 //\pi(\not(forall (\lambda m, \not(p m)))
-// theorem exists_neg_forall :∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(all(λm:τ nat, ¬ (P m))))
+// theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall(λm:τ nat, ¬ (P m))))
 // proof
+//   assume P H1 H2
+//   apply H2
 // qed
 //@TODO 5
 
@@ -874,16 +876,18 @@ admit
 //////////////////////////
 
 //Definition is_even n := exists p, n = 2 * p.
-//definition n ≔ π (∃p, eq {nat} n (mult 2 p))
+definition is_even n ≔ ∃(λp, n = (mult 2 p))
 
 //Lemma zero_is_even : is_even 0.
 //Proof.
 //unfold is_even.
 //exists 0. simpl. reflexivity.
 //Defined.
-// theorem zero_is_even : is_even 0
-// proof
-// admit
+theorem zero_is_even : π (is_even 0)
+proof
+  apply ex_intro (λp, O = mult (S (S O)) p) 0
+  reflexivity
+qed
 
 //Lemma is_even_plus : forall n p, 
 //   is_even n -> is_even p -> is_even (n + p).
@@ -897,8 +901,16 @@ admit
 //rewrite  mult_plus_distr_l.
 //rewrite Hk.  rewrite Ht. reflexivity.
 //Qed.       
-//
-//
+theorem is_even_plus : ∀n p, π (is_even n) ⇒ π (is_even p) ⇒ π (is_even (plus n p))
+proof
+  assume n p Hn Hp
+  apply ex_elim (λp, n = mult (S (S O)) p)   apply Hn assume x Hx
+  apply ex_elim (λp0, p = mult (S (S O)) p0) apply Hp assume y Hy
+  apply ex_intro (λp0, plus n p = mult (S (S O)) p0) (plus x y)
+  rewrite mult_plus_distr_l
+  rewrite  Hx rewrite Hy reflexivity
+qed
+
 // On rappelle la définition de [even] sous forme d'un prédicat inductif.
 
 //Inductive even : nat -> Prop :=
