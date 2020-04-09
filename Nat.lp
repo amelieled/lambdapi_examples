@@ -16,7 +16,7 @@ rule   0  + &y → &y            // les autres règles en découlent
  and S &x + &y → S (&x + &y)
 
 // Addition is commutative
-theorem add0r x : π (x + 0 = x)
+theorem add0r x : π ((x + 0) = x)
 proof
   refine nat_ind _ _ _
   // case x = 0
@@ -30,7 +30,7 @@ qed
 
 rule &x + 0 → &x
 
-theorem addsr x y : π (x + S y = S (x + y))
+theorem addsr x y : π ((x + S y) = S (x + y))
 proof
   refine nat_ind _ _ _
   // case x = 0
@@ -45,7 +45,7 @@ qed
 
 rule &x + S &y → S (&x + &y)
 
-theorem add_com x y : π (x+y = y+x)
+theorem add_com x y : π ((x+y) = (y+x))
 proof
   refine nat_ind _ _ _
   // case x = 0
