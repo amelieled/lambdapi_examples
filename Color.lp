@@ -142,13 +142,12 @@ rule my_P true  → ⊤
      //eq_ind
      //: forall (A : Type) (x : A) (P : A -> Prop),
      //'  P x -> forall y : A, x = y -> P y
-rule ⊤ → true = true
          
 theorem discriminate : π (false = true) ⇒ π ⊥
 proof
   assume H
   apply eq_ind false true H my_P
-  reflexivity     
+  apply I 
 qed
 
 // theorem discriminate_2 : π (true = false) ⇒ π ⊥

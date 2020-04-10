@@ -26,7 +26,8 @@ symbol false_elim p : π ⊥ ⇒ π p
 // True
 set declared "⊤"
 symbol ⊤ : Prop
-                    
+symbol I : π (⊤)
+
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
