@@ -31,36 +31,39 @@ symbol color_ind : ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary
 // Some functions         
 //////////////////////////////////////////
 
-symbol monochrome : C ⇒ B
-rule monochrome black     → true
- and monochrome white     → true
- and monochrome (primary _) → false
+symbol black_or_white : C ⇒ B
+rule black_or_white black     → true
+ and black_or_white white     → true
+ and black_or_white (primary _) → false
 
 symbol isred : C ⇒ B
 rule isred black       → false
  and isred white       → false
  and isred (primary red) → true
- and isred (primary _  ) → false
+ and isred (primary green) → false
+ and isred (primary blue) → false
 
 symbol isgreen : C ⇒ B
 rule isgreen black       → false
  and isgreen white       → false
+ and isgreen (primary red) → false
  and isgreen (primary green) → true
- and isgreen (primary _  ) → false
+ and isgreen (primary blue) → false
                            
 symbol isblue : C ⇒ B
 rule isblue black       → false
  and isblue white       → false
+ and isblue (primary red) → false
+ and isblue (primary green) → false
  and isblue (primary blue) → true
- and isblue (primary _  ) → false
 
 theorem left_rgb : ∀n,
-π (monochrome (primary n) = false ⊃ isred (primary n) = true ∨ isgreen (primary n) = true ∨ isblue (primary n) = true)
+π (black_or_white (primary n) = false ⊃ isred (primary n) = true ∨ isgreen (primary n) = true ∨ isblue (primary n) = true)
 proof
   assume n
-  refine rgb_ind (λz, monochrome (primary z) = false ⊃
+  refine rgb_ind (λz, black_or_white (primary z) = false ⊃
                       isred (primary z) = true ∨ isgreen (primary z) = true
                       ∨ isblue (primary z) = true) _ _ _ n
   // Goal red
   simpl
-qed
+admit
