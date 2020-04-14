@@ -223,10 +223,10 @@ assert λA (l:L A) x y, (cons x (cons y l)) ≡ λA (l:L A) x y, (x⸬(y⸬l))
 symbol list_ind {a} p : π(p nil) ⇒ (∀(x:τ a) l, π(p l) ⇒ π( p (x⸬l))) ⇒ ∀l, π(p l)
 
 // Eval compute in (cons nat 1 (cons nat (S 1) (nil nat))).
-compute (cons 1 (cons (S 1) nil))
+compute (1⸬(S 1)⸬nil)
 
 // Eval compute in (cons bool true (cons bool false (nil bool))).
-compute (cons true (cons false nil))
+compute (true⸬false ⸬nil)
 					    
 // Definition id (A:Type) (x:A) := x.
 definition id A x:A ≔ x
@@ -243,7 +243,7 @@ rule length nil → 0
 //Eval compute in (length bool 
 //   (cons bool true 
 //         (cons bool false (nil bool)))).
-compute length (cons true (cons false nil))
+compute length (true⸬false ⸬nil)
 
 //Fixpoint app (A:Type) l1 l2 :=
 //  match l1 with
@@ -1089,7 +1089,7 @@ proof
   //simpl assume Heven0 apply even_0_coq                             
   //simpl assume x Himpl HevenSx //assume n assume Heven
                                   
-qed//@TODO 5
+qed//@TODO 5 inversion
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
@@ -1101,7 +1101,7 @@ qed//@TODO 5
 //Qed.
 theorem even5_nonsense : π (even 5) ⇒ π ((plus 2 2) = 9)
 proof
-admit //@TODO 6
+admit //@TODO 6 inversion
 
 //Lemma ev_even : forall n,
 //  even n -> exists k, n = 2 * k.
@@ -1127,24 +1127,37 @@ admit //@TODO 7
 
 //Lemma even_n_disj_Sn : forall n, even n \/ even (S n).
 //Proof.
-//Admitted.
+//induction n.
+// * left. constructor.
+// * destruct IHn.
+//    + right. constructor. assumption.
+//    + left. assumption.
+//Defined..
 theorem even_n_disj_Sn : ∀n, π (even n ∨ even (S n))
 proof
 admit //@TODO 8
 
 //Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
 //Proof.
-//Admitted.
+//  * inversion Hyp2.
+//  * inversion Hyp2. unfold not in IHn. apply IHn;assumption.
+//Defined.
 theorem even_n_neg_Sn : ∀n, π (even n) ⇒ π (¬ (even (S n)))
 proof
-admit //@TODO 9
+admit //@TODO 9 inversion
 
 //Lemma even_dec : forall n, even n \/ ~ even n.
 //Proof.
-//Admitted.
+//intro n.
+//assert(even n \/ even (S n)) by (apply even_n_or_Sn).
+//destruct H as [| HypN].
+//  * left. assumption.
+//  * right. intro H. apply even_n_not_Sn in H.
+//    contradiction.
+//Defined.
 theorem even_dec : ∀n, π (even n ∨ ¬(even (S n)))
 proof
-admit //@TODO 10
+admit //@TODO 10 assert
 
 //  Induction de 2 en 2.
 //Lemma two_steps_induction : forall P : nat -> Prop, P 0 -> P 1 ->
@@ -1153,16 +1166,25 @@ admit //@TODO 10
 //Proof.
 //  intros P H0 H1 IHn.
 //  assert (forall n, P n /\ P (S n)) as Hn.
-//Admitted.
+//   - induction n.
+//      + split;assumption.
+//      + decompose [and] IHn0. apply IHn in H.
+//        split;assumption.
+//   - induction n.
+//      + assumption.
+//      + assert(P n /\ P (S n)) by (apply Hn).
+//        decompose [and] H. assumption.
+//Defined.
 theorem two_steps_induction :
 ∀(p : N ⇒ Prop), π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
 proof
-admit //@TODO 11
+admit //@TODO 11 assert
 
 // Définir [evenb : nat -> bool] qui teste si un entier est pair.
 
-//Fixpoint evenb (n:nat) : bool.
-//Admitted.
+//Fixpoint evenb (n:nat) : bool := match n with
+//| O => true
+//| S a => negb (evenb a)
 symbol evenb : N ⇒ B//@TODO 12
 
 //    Prouver les lemmes suivants. Si vous avez besoin de résultats sur les
@@ -1171,21 +1193,37 @@ symbol evenb : N ⇒ B//@TODO 12
 
 //Lemma evenb_correct : forall n, evenb n = true -> even n.
 //Proof.
-//Admitted.
+//intros n H. induction n using two_steps_induction.
+// + constructor.
+// + inversion H.
+// + constructor. apply IHn.
+//   inversion H. 
+//   apply Bool.negb_involutive_reverse.
+//Defined.
 theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
 proof
-admit //@TODO 13
+admit //@TODO 13 inversion
 
 //Lemma evenb_complete : forall n, even n -> evenb n = true.
 //Proof.
-//Admitted.
+//intros n H. induction n using two_steps_induction.
+// + constructor.
+// + inversion H.
+// + inversion H. apply IHn in H1.
+//   simpl.
+//   rewrite Bool.negb_involutive_reverse.
+//   rewrite H1. reflexivity.
+//Defined.
 theorem evenb_complte : ∀n, π (even n) ⇒  π (evenb n = true)
 proof
-admit //@TODO 14
+admit //@TODO 14 inversion
                    
 //Definition evenb_spec : forall n, evenb n = true <-> even n.
 //Proof.
-//Admitted.
+//split.
+// + apply evenb_correct.
+// + apply evenb_complete.
+Defined.
 theorem evenb_spec : ∀n, π (evenb n = true ⇔ even n)
 proof
 admit //@TODO 15
@@ -1194,10 +1232,15 @@ admit //@TODO 15
 
 //Lemma even_dec_bis : forall n, even n \/ ~ even n.
 //Proof.
-//Admitted.
+//intro n. destruct (evenb n) eqn:H. (* Merci Mme Dubois *)
+// * left. apply evenb_correct;assumption.
+// * right. unfold not;intro.
+//   apply evenb_complete in H0.
+//   rewrite H in H0. inversion H0.
+//Defined.
 theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
 proof
-admit //@TODO 16
+admit //@TODO 16 inversion
 
 /////////////////////////////////
 // Exercice 6 - Dernier retour sur les listes
@@ -1221,14 +1264,27 @@ type app
 //Lemma app_left : forall l1 l2 x,
 //mem x l1 -> mem x (app l1 l2).
 //Proof.
-//Admitted.
+//induction l1;intros l2 x Hyp.
+// * inversion Hyp.
+// * inversion Hyp.
+//     - subst. constructor.
+//     - simpl. constructor. apply IHl1. assumption.
+//Defined.
 theorem app_left : ∀A (l1 l2: L A) (x:τ A), π (mem x l1) ⇒ π (mem x (app l1 l2))
 proof
-admit //@TODO 17
+admit //@TODO 17 inversion
 
 //Lemma app_or : forall l1 l2 x, mem x (app l1 l2) -> mem x l1 \/ mem x l2.
 //Proof.
-//Admitted.
+//induction l1;intros l2 x Hyp.
+// * simpl in Hyp. right. assumption.
+// * inversion Hyp.
+//     - subst. left. constructor.
+//     - simpl. apply IHl1 in H1.
+//       destruct H1 as [| Hypliste].
+//          + left. constructor. assumption.
+//          + right. assumption.
+//Defined.
 theorem app_or : ∀A (l1 l2: L A) (x:τ A), π (mem x (app l1 l2)) ⇒ π ((mem x l1) ∨ (mem x l2))
 proof
 admit //@TODO 18
