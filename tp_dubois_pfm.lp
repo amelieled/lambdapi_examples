@@ -6,11 +6,11 @@
 // Ma traduction vers LP suit.
 
 require open amelie.notation
-                                  
+
 ////////////////////////////////////
 // Avant de prendre la route...
 ////////////////////////////////////
-                                  
+
 // Inductive route : Type :=
 // | departementale : route
 // | nationale : route
@@ -21,12 +21,13 @@ constant symbol departementale : R
 constant symbol nationale      : R
 constant symbol autoroute      : R
 
-// Definition agrandir (r : route) := 
+// Definition agrandir (r : route) :=
 //   match r with
 //  | departementale => nationale
 //  | nationale => autoroute
 //  | autoroute => autoroute
-//  end.                        
+//  end.
+
 symbol agrandir : R ⇒ R
 rule agrandir departementale → nationale
  and agrandir nationale      → autoroute
@@ -35,7 +36,7 @@ rule agrandir departementale → nationale
 // Eval compute in (agrandir (agrandir nationale)).
 compute agrandir (agrandir nationale)
 
-theorem agrandir_test : // version théorème 
+theorem agrandir_test : // version théorème
   π (agrandir (agrandir nationale) = autoroute)
 proof
   reflexivity
@@ -79,7 +80,8 @@ rule not true → false
 //  match b1 with
 //  | true => b2
 //  | false => false
-//  end.                
+//  end.
+
 symbol andb : B ⇒ B ⇒ B
 rule andb false _  → false
  and andb _ false  → false
@@ -98,7 +100,7 @@ rule or true _  → true
  and or false &b2 → &b2
 
 // /////////////////////// Entiers naturels
-                  
+
 // Inductive nat : Type :=
 // | O : nat
 // | S : nat -> nat.
@@ -106,13 +108,13 @@ rule or true _  → true
 
 // Check O.
 type O
-// Check S. 
+// Check S.
 type S
 
 //Notation "0" := O.
 //Notation "1" := (S O).
 //Cf notation.lp
-     
+
 //Fixpoint plus n m :=
 //  match n with
 //  | 0 => m
@@ -128,7 +130,7 @@ rule 0 + &m → &m
 
 // Eval compute in (0 + 1).
 compute 0+1
-                        
+
 // Eval compute in (plus 1 1).
 compute plus 1 1
 
@@ -142,8 +144,8 @@ definition Lb ≔ τ list_bool    // équivalent à ce qui a été fait avant o:
 constant symbol nilb  : Lb
 constant symbol consb : B ⇒ Lb ⇒ Lb
 
-// symbol listb_ind p : π (p nilb) ⇒ (∀x l, π (p l) ⇒ π (p (consb x l))) ⇒ ∀l, π (p l) 
-                                 
+// symbol listb_ind p
+//: π (p nilb) ⇒ (∀x l, π (p l) ⇒ π (p (consb x l))) ⇒ ∀l, π (p l)
 // Check nilb.
 type nilb
 
@@ -157,7 +159,7 @@ type example
 //   match l1 with
 //   | nilb => l2
 //   | consb a l => consb a (appb l l2)
-//  end. 
+//  end.
 symbol appb : Lb ⇒ Lb ⇒ Lb
 rule appb nilb         &l2 → &l2
  and appb (consb &a &l) &l2 → consb &a (appb &l &l2)
@@ -166,7 +168,7 @@ rule appb nilb         &l2 → &l2
 type appb
 
 // ///////////////////////////////////// Suite booléen
-     
+
 //Definition apply_neg (f : _ -> _ -> bool) b1 b2 :=
 //  f (not b1) (not b2).
 definition apply_neg (f: _ ⇒ _ ⇒ B) b1 b2 ≔ f (not b1) (not b2)
@@ -176,14 +178,14 @@ type apply_neg
 
 // Definition nor := apply_neg andb.
 definition nor ≔ apply_neg andb
-                             
+
 // Check nor.
 type nor
- 
-// Definition nor := 
+
+// Definition nor :=
 //   apply_neg (fun b1 => fun b2 => b2).
 definition nor_lambda ≔ apply_neg (λ_ b2, b2)
- 
+
 // Eval compute in (nor true false).
 compute nor true false
 
@@ -193,10 +195,10 @@ definition idb : B ⇒ B ≔ λb, b
 // identique à
 // Definition idb (b : bool) := b.
 definition idb_bis b:B ≔ b
-                             
+
 //Definition my_first := apply_neg (fun b1 => fun b2 => b1).
 definition my_first ≔ apply_neg (λb1 _, b1)
-                         
+
 //Eval compute in (my_first true false).
 compute (my_first true false)
 
@@ -220,14 +222,15 @@ constant symbol cons {a} : τ a ⇒ L a ⇒ L a
 set infix right 4 "⸬" ≔ cons
 assert λA (l:L A) x y, (cons x (cons y l)) ≡ λA (l:L A) x y, (x⸬(y⸬l))
 
-symbol list_ind {a} p : π(p nil) ⇒ (∀(x:τ a) l, π(p l) ⇒ π( p (x⸬l))) ⇒ ∀l, π(p l)
+symbol list_ind {a} p
+  : π(p nil) ⇒ (∀(x:τ a) l, π(p l) ⇒ π( p (x⸬l))) ⇒ ∀l, π(p l)
 
 // Eval compute in (cons nat 1 (cons nat (S 1) (nil nat))).
 compute (1⸬(S 1)⸬nil)
 
 // Eval compute in (cons bool true (cons bool false (nil bool))).
 compute (true⸬false ⸬nil)
-					    
+
 // Definition id (A:Type) (x:A) := x.
 definition id A x:A ≔ x
 
@@ -235,13 +238,13 @@ definition id A x:A ≔ x
 //  match l with
 //  | nil _ => 0
 //  | cons _ _ t => S (length A t)
-//  end. 
+//  end.
 symbol length {A} : L A ⇒ N
 rule length nil → 0
  and length (cons _ &t) → S (length &t)
-                      
-//Eval compute in (length bool 
-//   (cons bool true 
+
+//Eval compute in (length bool
+//   (cons bool true
 //         (cons bool false (nil bool)))).
 compute length (true⸬false ⸬nil)
 
@@ -249,7 +252,7 @@ compute length (true⸬false ⸬nil)
 //  match l1 with
 //  | nil _ => l2
 //  | cons _ a l => cons A a (app A l l2)
-//    end. 
+//    end.
 symbol app {A} : L A ⇒ L A ⇒ L A
 rule app nil &l2        → &l2
  and app (cons &x &l) &l2 → cons &x (app &l &l2)
@@ -270,20 +273,20 @@ definition apply_neg_gen2 {A} (f : _ ⇒ _ ⇒ A) b1 b2 ≔
 // Definition nor3 := apply_neg_gen2 andb.
 definition nor3 ≔ apply_neg_gen2 andb
 
-// Definition toto (b1 b2 : bool) := 0. 
+// Definition toto (b1 b2 : bool) := 0.
 definition toto (_ _ : B) ≔ 0
 
 // Eval compute in apply_neg_gen  nat toto true false.
 compute apply_neg_gen N toto true false
-                                       
+
 // //////////////////////////////////////////// Logique sur les booléens
 
 require open amelie.Logic
 definition equiv (p q : Prop) ≔ imp p q ∧ imp q p
 set infix left 7 "⇔" ≔ equiv
-                       
+
 // Check True. (* True : Prop *)
-type true // (* true : B *)                                      
+type true // (* true : B *)
 
 // Check True -> False. (* True -> False : Prop *)
 type (imp ⊤ ⊥) // imp ⊤ ⊥ : Prop
@@ -309,7 +312,7 @@ theorem bool_ext :
 ∀p, π (p true ∧ p false) ⇒ ∀b, π(p b)
 proof
   assume P Hp b
-  refine bool_ind (λz, P z) _ _ _               
+  refine bool_ind (λz, P z) _ _ _
   apply conj_elim_left _ (P false)
   refine Hp
   apply conj_elim_right (P true) _
@@ -333,7 +336,7 @@ qed
 //Lemma andb_prop : forall b1 b2,
 //  andb b1 b2 = true -> b1 = true /\ b2 = true.
 //Proof.
-//  intros b1 b2 H. 
+//  intros b1 b2 H.
 //  (* introduit les hypothèses *)
 //  split. (* sépare le but en deux sous-buts *)
 //  - destruct b1. (* raisonnement par cas *)
@@ -354,7 +357,7 @@ qed
 symbol my_P : B ⇒ Prop
 rule my_P true  → ⊤
  and my_P false → ⊥
-         
+
 theorem discr : π (false = true) ⇒ π ⊥
 proof
   assume H
@@ -362,14 +365,15 @@ proof
   apply I
 qed
 
-//theorem andb_prop :                        // Il me manque un outil pour y arriver avec cet énoncé
+//theorem andb_prop : // Il me manque un outil pour y arriver avec cet énoncé
 //∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))
-theorem andb_prop b1 b2 : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
+theorem andb_prop b1 b2
+  : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
 proof
   assume b1 b2
   refine bool_ind (λz, imp (andb z b2 = true) ((z = true) ∧ (b2 = true))) _ _ _
-  // Case b1 = true                                            
+  // Case b1 = true
   simpl
   assume H
   apply conj_intro
@@ -386,10 +390,11 @@ qed
 //   Exercice 2 - De premières preuves
 /////////////////////////////////////
 
-//   [andb_true_iff : forall b1 b2, andb b1 b2 = true <-> b1 = true /\ b2 = true]
-//    Montrer [or_true_iff], un résultat similaire sur [or].  
+//[andb_true_iff : forall b1 b2,andb b1 b2 = true <-> b1 = true /\ b2 = true]
+//    Montrer [or_true_iff], un résultat similaire sur [or].
 
-theorem andb_true_iff b1 b2 : π ((andb b1 b2 = true) ⇔ ((b1 = true) ∧ (b2 = true)))
+theorem andb_true_iff b1 b2
+  : π ((andb b1 b2 = true) ⇔ ((b1 = true) ∧ (b2 = true)))
 proof
   assume b1 b2
   refine bool_ind (λz, imp ((andb z b2) =  true)
@@ -467,7 +472,7 @@ proof
   assume n' Hn'
   simpl
   rewrite Hn'
-  reflexivity    
+  reflexivity
 qed
 
 //Fixpoint mult (n m : nat) :  nat :=
@@ -514,7 +519,7 @@ qed
 //  n+(m+p) = n+m+p.
 //Proof.
 //induction n ; intros m p.
-//+ simpl. reflexivity. 
+//+ simpl. reflexivity.
 //+ simpl. rewrite IHn. reflexivity.
 //Qed.
 theorem plus_assoc :
@@ -607,7 +612,8 @@ theorem mult_plus_distr_r :
 ∀n m p, π ((mult (plus n m) p) = (plus (mult n p) (mult m p)))
 proof
   assume n m p
-  refine nat_ind (λz, ((mult (plus z m) p) = (plus (mult z p) (mult m p)))) _ _ n
+  refine nat_ind
+         (λz, ((mult (plus z m) p) = (plus (mult z p) (mult m p)))) _ _ n
     reflexivity
     assume n' Hn' simpl rewrite Hn'
     apply plus_assoc p (mult n' p) (mult m p) // pas inféré
@@ -617,7 +623,7 @@ qed
 //Proof.
 //induction n ; intros m p; simpl.
 //+ reflexivity.
-//+ rewrite IHn. rewrite mult_plus_distr_r. reflexivity. 
+//+ rewrite IHn. rewrite mult_plus_distr_r. reflexivity.
 //Qed.
 theorem mult_assoc : ∀ n m p, π ((n*(m*p)) = ((n*m)*p))
 proof
@@ -636,7 +642,7 @@ qed
 //Proof.
 //induction n; intros m p ; simpl.
 //+ reflexivity.
-//+ rewrite IHn. 
+//+ rewrite IHn.
 //    rewrite plus_comm with (n:=p) (m:=n*p).
 //    rewrite <- plus_assoc with (n:=m) (m:=n*m) (p:=n*p+p).
 //    rewrite plus_comm with (n:=m) (m:=n*m + (n*p + p)).
@@ -679,7 +685,8 @@ admit
 //rewrite <- mult_plus_distr_r.
 //apply mult_comm.
 //Qed.
-theorem mult_plus_distr_l_bis : ∀n m p, π ((mult n (plus m p)) = (plus (mult n m) (mult n p)))
+theorem mult_plus_distr_l_bis :
+  ∀n m p, π ((mult n (plus m p)) = (plus (mult n m) (mult n p)))
 proof
   assume n m p
   rewrite mult_comm n m
@@ -687,7 +694,7 @@ proof
   rewrite mult_comm n (plus m p)
   symmetry
   rewrite mult_plus_distr_r
-  reflexivity 
+  reflexivity
 qed
 
 ////////////////////////////
@@ -724,7 +731,7 @@ proof
     apply HP
     apply HQ
 qed
-      
+
 //Lemma conj_impl_iff : forall P Q R : Prop, (P /\ Q -> R) <-> (P -> Q -> R).
 //Proof.
 //split.
@@ -732,7 +739,7 @@ qed
 //+ apply impl_and.
 //Qed.
 theorem conj_impl_iff : ∀P Q R : Prop,
-π ((imp (P ∧ Q) R) ⇔ (imp P (imp Q R)))  
+π ((imp (P ∧ Q) R) ⇔ (imp P (imp Q R)))
 proof
   assume P Q R
   apply conj_intro
@@ -784,7 +791,7 @@ proof
   refine modus_ponens P ⊥
 qed
 
-// à partir de [impl_not] 
+// à partir de [impl_not]
 //Lemma P_notP_contradiction : forall P : Prop, ~ (P /\ ~ P).
 //Proof.
 //intro P.
@@ -823,15 +830,16 @@ proof
      //apply HQ
 admit // @TODO 3 probleme avec les nouvelles règles
 
-//Lemma exists_neg_forall : forall P : nat -> Prop, 
+//Lemma exists_neg_forall : forall P : nat -> Prop,
 //(exists n, P n) ->  ~(forall n,~ (P n)).
 //Proof.
-//intros P H H1. 
+//intros P H H1.
 //destruct H as [n0 H0].
 //specialize (H1 n0).
 //contradiction.
 //Qed.
-theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall (λm:N, ¬ (P m))))
+theorem exists_neg_forall :
+  ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall (λm:N, ¬ (P m))))
 proof
   assume P Hexists Hforall
   //apply H2
@@ -858,9 +866,9 @@ type list
 //Notation "[ x ; y ; .. ; z ]" := (cons x (cons y .. (cons z nil) ..)).
 // possible ?
 
-//  Montrer que le nombre d'éléments de la concaténation de deux listes est la somme
-//  des nombres des éléments de chacune.
-     
+// Montrer que le nombre d'éléments de la concaténation de deux listes est
+// la somme des nombres des éléments de chacune.
+
 // Lemma equal_length : forall l1 l2,
 // (length l1) + (length l2) = length (app l1 l2).
 // Proof.
@@ -868,16 +876,19 @@ type list
 //  * simpl. reflexivity.
 //  * simpl. intro l2. rewrite IHl1. reflexivity.
 // Defined.
-theorem sum_length : ∀A (l1 l2 : L A), π ((plus (length l1) (length l2)) = (length (app l1 l2)))
+theorem sum_length :
+  ∀A (l1 l2 : L A), π ((plus (length l1) (length l2)) = (length (app l1 l2)))
 proof
   assume A l1 l2
-  apply list_ind (λz, (plus (length z) (length l2)) = (length (app z l2))) _ _ l1
+  apply list_ind
+        (λz, (plus (length z) (length l2)) = (length (app z l2))) _ _ l1
   reflexivity
   assume x l2 IHl1
   simpl rewrite IHl1 reflexivity
 qed
 
-// Définir la fonction qui renverse une liste (on utilisera la fonction précédente app)
+// Définir la fonction qui renverse une liste (on utilisera la fonction
+// précédente app)
 // et  montrer que reverse(reverse l) = l pour tout l, par induction sur l
 symbol reverse {A} : L A ⇒ L A
 rule reverse nil          → nil
@@ -895,7 +906,8 @@ proof
   apply list_ind (λz, app z nil = z) _ _
   // 0. π (app nil nil = nil)
   reflexivity
-  // 1. ∀(x:τ A) (l0:τ (list A)), π (app l0 nil = l0) ⇒ π (app (x ⸬ l0) nil = (x ⸬ l0))
+  // 1. ∀(x:τ A) (l0:τ (list A)),
+  // π (app l0 nil = l0) ⇒ π (app (x ⸬ l0) nil = (x ⸬ l0))
   assume x l IHl
   simpl
   rewrite IHl
@@ -909,14 +921,15 @@ qed
 //  + simpl. reflexivity.
 //  + simpl. intros l2 l3. rewrite IHl1. reflexivity.
 // Defined.
-theorem app_assoc : ∀A (l1 l2 l3 : L A), π (app (app l1 l2) l3 = app l1 (app l2 l3))
+theorem app_assoc :
+  ∀A (l1 l2 l3 : L A), π (app (app l1 l2) l3 = app l1 (app l2 l3))
 proof
   assume A l1 l2 l3
   apply list_ind (λz, app (app z l2) l3 = app z (app l2 l3)) _ _ l1
   // 0. π (app (app nil l2) l3 = app nil (app l2 l3))
   reflexivity
   // 1. ∀(x:τ A) (l:τ (list A)), π (app (app l l2) l3 = app l (app l2 l3)) ⇒
-                                          // π (app (app (x ⸬ l) l2) l3 = app (x ⸬ l) (app l2 l3))
+  // π (app (app (x ⸬ l) l2) l3 = app (x ⸬ l) (app l2 l3))
   assume A
   simpl
   assume l IHl
@@ -932,28 +945,31 @@ proof
   assume A l x simpl reflexivity
 qed
 
-// Lemma reverse_bis_concat : forall l1 l2,  
-// reverse_bis (app l1 l2) = 
+// Lemma reverse_bis_concat : forall l1 l2,
+// reverse_bis (app l1 l2) =
 // app (reverse_bis l2) (reverse_bis l1).
 // Proof.
 // induction l1.
 //  + simpl. intro l2. rewrite app_nil. reflexivity.
-//  + simpl. intro l2. 
-//    rewrite IHl1. 
+//  + simpl. intro l2.
+//    rewrite IHl1.
 //    apply app_assoc.
-// Defined. 
-theorem reverse_concat : ∀A (l1 l2:L A), π ((reverse (app l1 l2)) = app (reverse l2) (reverse l1))
+// Defined.
+theorem reverse_concat :
+  ∀A (l1 l2:L A), π ((reverse (app l1 l2)) = app (reverse l2) (reverse l1))
 proof
   assume A l1 l2
-  apply list_ind (λz, (reverse (app z l2)) = (app (reverse l2) (reverse z))) _ _ l1
+  apply list_ind
+        (λz, (reverse (app z l2)) = (app (reverse l2) (reverse z))) _ _ l1
   simpl
   //refine eq_sym (reverse l2) (app (reverse l2) nil)
   rewrite app_nil A (reverse l2) reflexivity
 
-  simpl assume x l2 IHl1 rewrite IHl1 apply app_assoc A (reverse l2) (reverse l3) (cons x nil)
+  simpl assume x l2 IHl1 rewrite IHl1
+  apply app_assoc A (reverse l2) (reverse l3) (cons x nil)
 qed
 
-// Lemma fixpoint_prop_bis : forall l, 
+// Lemma fixpoint_prop_bis : forall l,
 // reverse_bis (reverse_bis l) = l.
 // Proof.
 // induction l.
@@ -961,14 +977,15 @@ qed
 //  * rewrite special_case.
 //    repeat rewrite reverse_bis_concat.
 //    simpl. rewrite IHl. reflexivity.
-// Defined.                              
+// Defined.
 theorem fixpoint_reverse : ∀A (l:L A), π (reverse (reverse l) = l)
 proof
   assume A l
   apply list_ind (λz, reverse (reverse z) = z) _ _
   // 0. π (reverse (reverse nil) = nil)
   reflexivity
-  // 1. ∀(x:τ A) (l0:τ (list A)), π (reverse (reverse l0) = l0) ⇒ π (reverse (reverse (x ⸬ l0)) = (x ⸬ l0))
+  // 1. ∀(x:τ A) (l0:τ (list A)),
+  // π (reverse (reverse l0) = l0) ⇒ π (reverse (reverse (x ⸬ l0)) = (x ⸬ l0))
   assume x l0 IHl
   simpl rewrite reverse_concat A //(reverse l0) (cons x nil)
   simpl rewrite IHl reflexivity
@@ -992,7 +1009,7 @@ proof
   reflexivity
 qed
 
-//Lemma is_even_plus : forall n p, 
+//Lemma is_even_plus : forall n p,
 //   is_even n -> is_even p -> is_even (n + p).
 //Proof.
 //intros n p Hn Hp.
@@ -1003,8 +1020,9 @@ qed
 //exists (k + t).
 //rewrite  mult_plus_distr_l.
 //rewrite Hk.  rewrite Ht. reflexivity.
-//Qed.       
-theorem is_even_plus : ∀n p, π (is_even n) ⇒ π (is_even p) ⇒ π (is_even (plus n p))
+//Qed.
+theorem is_even_plus :
+  ∀n p, π (is_even n) ⇒ π (is_even p) ⇒ π (is_even (plus n p))
 proof
   assume n p Hn Hp
   apply ex_elim (λp, n = mult (S (S O)) p)   apply Hn assume x Hx
@@ -1064,8 +1082,10 @@ proof
   apply Heven
 qed
 
-symbol even_inject : ∀n, (π (n = 0) ⇒ π (even 0)) ⇒ (π (∃(λp,n = S (S p) ⊃ even p ⊃ even (S (S p)))) ⇒ π (even n))
-symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0)) ⇒ (π (∃(λp,n = S (S p) ⊃ even p ⊃ even (S (S p)))))
+symbol even_inject : ∀n, (π (n = 0) ⇒ π (even 0))
+  ⇒ (π (∃(λp,n = S (S p) ⊃ even p ⊃ even (S (S p)))) ⇒ π (even n))
+symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0))
+  ⇒ (π (∃(λp,n = S (S p) ⊃ even p ⊃ even (S (S p)))))
 //Theorem ev_minus2 : forall n,
 //  even n -> even (pred (pred n)).
 //Proof.
@@ -1077,22 +1097,21 @@ symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0)) ⇒ (π (�
 symbol pred : N ⇒ N
 rule pred 0      → 0
  and pred (S &n) → &n
-                   
+
 theorem ev_minus2 : ∀n, π (imp (even n) (even (pred (pred n))))
 proof
   assume n Heven
   //apply even_inj
   //apply nat_ind (λz, imp (even z) (even (pred (pred z)))) _ _ n
-  //simpl assume Heven0 apply even_0_coq                             
-  //simpl assume x Himpl HevenSx //assume n assume Heven
-                                  
+         //simpl assume Heven0 apply even_0_coq
+         //simpl assume x Himpl HevenSx //assume n assume Heven
 admit//@TODO 5 inversion
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
 //Proof.
 //  intro H.
-//  inversion H. 
+//  inversion H.
 //  inversion H1.
 //  inversion H3.
 //Qed.
@@ -1147,7 +1166,7 @@ proof
         apply even_SS_coq x apply Hevenx
         // 2. π (even (S x)) ⇒ π (even (S x) ∨ even (S (S x)))
         assume HevenSx
-        apply disj_intro_left apply HevenSx                                 
+        apply disj_intro_left apply HevenSx
 qed
 
 //Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
@@ -1189,8 +1208,8 @@ admit //@TODO 9 assert
 //      + assert(P n /\ P (S n)) by (apply Hn).
 //        decompose [and] H. assumption.
 //Defined.
-theorem two_steps_induction :
-∀(p : N ⇒ Prop), π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
+theorem two_steps_induction : ∀(p : N ⇒ Prop),
+  π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
 proof
   assume p Hp0 Hp1 IHn x //(forall n, P n /\ P (S n))
 
@@ -1204,7 +1223,7 @@ admit //@TODO 10 assert
 symbol evenb : N ⇒ B
 rule evenb O → true
  and evenb (S &a) → not (evenb &a)
-                         
+
 //    Prouver les lemmes suivants. Si vous avez besoin de résultats sur les
 //    booléens, vous pouvez les trouver dans [Bool]
 //    (utiliser [Require Import Bool.]).
@@ -1215,7 +1234,7 @@ rule evenb O → true
 // + constructor.
 // + inversion H.
 // + constructor. apply IHn.
-//   inversion H. 
+//   inversion H.
 //   apply Bool.negb_involutive_reverse.
 //Defined.
 theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
@@ -1235,7 +1254,7 @@ admit //@TODO 11 inversion
 theorem evenb_complete : ∀n, π (even n) ⇒  π (evenb n = true)
 proof
 admit //@TODO 12 inversion
-                   
+
 //Definition evenb_spec : forall n, evenb n = true <-> even n.
 //Proof.
 //split.
@@ -1250,7 +1269,8 @@ proof
   assume Hyp apply evenb_complete n Hyp
 qed //@DONE
 
-// Prouver [even_dec_bis : forall n, even n \/ ~ even n] en utilisant [evenb_spec].
+// Prouver [even_dec_bis : forall n, even n \/ ~ even n]
+// en utilisant [evenb_spec].
 
 //Lemma even_dec_bis : forall n, even n \/ ~ even n.
 //Proof.
@@ -1270,17 +1290,18 @@ admit //@TODO 13 destruct + inversion
 
 //Variable A : Type.
 //
-//Inductive mem : A -> list A -> Prop := 
+//Inductive mem : A -> list A -> Prop :=
 //  mem_head : forall x l, mem x (cons x l)
-//| mem_tail : forall x y l, 
+//| mem_tail : forall x y l,
 //   mem x l -> mem x (cons y l).
 symbol mem {A} : τ A ⇒ L A ⇒ Prop
 constant symbol mem_head {A} (x:τ A)   (l:L A) : π (mem x (cons x l))
-constant symbol mem_tail {A} (x y:τ A) (l:L A) : π (imp (mem x l) (mem x (cons y l))) 
+constant symbol mem_tail {A} (x y:τ A) (l:L A) :
+  π (imp (mem x l) (mem x (cons y l)))
 
 // Check app.
 type app
-     
+
 //Print app.
 
 //Lemma app_left : forall l1 l2 x,
@@ -1315,7 +1336,8 @@ proof
   // 0. π (mem x (app nil l2)) ⇒ π (mem x nil ∨ mem x l2)
   simpl assume Hmeml2 apply disj_intro_right apply Hmeml2
 //1. ∀(x0:τ A) (l:τ (list A)),
-//     (π (mem x (app l l2)) ⇒ π (mem x l ∨ mem x l2)) ⇒ π (mem x (app (x0 ⸬ l) l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+//     (π (mem x (app l l2)) ⇒ π (mem x l ∨ mem x l2))
+// ⇒ π (mem x (app (x0 ⸬ l) l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
   assume x0 l Hyp1 Hyp2
   simpl
 admit //@TODO 15 inversion
