@@ -6,7 +6,7 @@ set infix right 7 "∧" ≔ conj
 constant symbol conj_intro p q : π p ⇒ π q ⇒ π (p ∧ q)
 symbol conj_elim_left  p q : π (p ∧ q) ⇒ π p
 symbol conj_elim_right p q : π (p ∧ q) ⇒ π q
-
+//and_ind : ∀ A B P:Prop, (A→B→P)→A∧B→P
 // assert p q r ⊢ p ∧ q ∧ r ≡ p ∧ (q ∧ r)
 
 // Disjunction
@@ -31,8 +31,8 @@ symbol I : π (⊤)
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
-//constant symbol neg_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
-//symbol neg_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
+constant symbol neg_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
+symbol neg_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
 rule π (¬ &p) → π &p ⇒ π ⊥
 
 // assert p q ⊢ ¬ p ∧ q ≡ (¬ p) ∧ q
@@ -61,7 +61,7 @@ symbol ex_elim {a} p q : π (∃ p) ⇒ (∀x:τ a, π (p x) ⇒ π q) ⇒ π q
 // Set builtins for the rewrite tactic
 set builtin "all"   ≔ forall
 set builtin "bot"   ≔ ⊥
-//set builtin "top"   ≔ top
+set builtin "top"   ≔ ⊤
 set builtin "imp"   ≔ imp
 set builtin "and"   ≔ conj
 set builtin "or"    ≔ disj

@@ -354,14 +354,12 @@ qed
 symbol my_P : B ⇒ Prop
 rule my_P true  → ⊤
  and my_P false → ⊥
-
-rule ⊤ → true = true
          
 theorem discr : π (false = true) ⇒ π ⊥
 proof
   assume H
   apply eq_ind false true H my_P
-  reflexivity     
+  apply I
 qed
 
 //theorem andb_prop :                        // Il me manque un outil pour y arriver avec cet énoncé
@@ -667,7 +665,7 @@ proof
   //rewrite <- plus_assoc (p + m) (n*m) (n*p)
   //rewrite plus_comm (p + m) (n*m + n*p)
   //rewrite plus_assoc reflexivity
-//qed // @TODO_2
+//qed // @TODO_1
 admit
 
 //  Prouver en utilisant les lemmes précédents
@@ -801,10 +799,10 @@ theorem P_notP_contradiction : ∀P : Prop, π (¬(P ∧ ¬P))
 proof
   assume P Hand
   //apply neg_intro (P ∧ ¬P)
-  // apply neg_elim P
-     //apply conj_elim_right P _   apply Hand
+  apply neg_elim P
+     //apply conj_elim_right P _ simpl  apply Hand
      //apply conj_elim_left _ (¬P) apply Hand
-admit // @TODO 3 : problème avec les nouvelles règles
+admit // @TODO 2 : problème avec les nouvelles règles
 
 //Lemma neg_and : forall P Q : Prop, P \/ Q -> ~(~ P /\ ~Q).
 //Proof.
@@ -823,7 +821,7 @@ proof
   //assume HQ apply neg_elim Q
      //refine conj_elim_right (¬P) (¬Q) _ apply Hand
      //apply HQ
-admit // @TODO 4 probleme avec les nouvelles règles
+admit // @TODO 3 probleme avec les nouvelles règles
 
 //Lemma exists_neg_forall : forall P : nat -> Prop, 
 //(exists n, P n) ->  ~(forall n,~ (P n)).
@@ -833,12 +831,16 @@ admit // @TODO 4 probleme avec les nouvelles règles
 //specialize (H1 n0).
 //contradiction.
 //Qed.
-theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall {nat} (λm:N, ¬ (P m))))
+theorem exists_neg_forall : ∀(P : N ⇒ Prop), π(∃P) ⇒ π (¬(forall (λm:N, ¬ (P m))))
 proof
-  //assume P H1 H2
-//   apply H2
-admit
-//@TODO 5_probleme de type
+  assume P Hexists Hforall
+  //apply H2
+  apply ex_elim {nat} P ⊥
+  apply Hexists
+  //apply Hforall
+  assume x H apply Hforall x H
+qed
+//@DONE
 
 ////////////////////////
 //  Exercice 4 - Retour que les listes polymorphes
@@ -847,7 +849,7 @@ admit
 //Check list.
 type list
 
-// Notation "[]" := nil. //@TODO 6
+// Notation "[]" := nil. //@TODO 3
 // set declared "[]"
 // rule [] → nil
 
@@ -872,8 +874,8 @@ proof
   apply list_ind (λz, (plus (length z) (length l2)) = (length (app z l2))) _ _ l1
   reflexivity
   assume x l2 IHl1
-  simpl apply eq_sym {nat} //symmetry rewrite IHl1
-admit //@TODO 7 problem
+  simpl rewrite IHl1 reflexivity
+qed
 
 // Définir la fonction qui renverse une liste (on utilisera la fonction précédente app)
 // et  montrer que reverse(reverse l) = l pour tout l, par induction sur l
@@ -896,9 +898,9 @@ proof
   // 1. ∀(x:τ A) (l0:τ (list A)), π (app l0 nil = l0) ⇒ π (app (x ⸬ l0) nil = (x ⸬ l0))
   assume x l IHl
   simpl
-  // rewrite IHl
-  // reflexivity
-admit // problem
+  rewrite IHl
+  reflexivity
+qed
 
 // Lemma app_assoc : forall l1 l2 l3,
 // app (app l1 l2) l3 = app l1 (app l2 l3).
@@ -917,10 +919,9 @@ proof
                                           // π (app (app (x ⸬ l) l2) l3 = app (x ⸬ l) (app l2 l3))
   assume A
   simpl
-  //assume l IHl
-  //rewrite IHl // reflexivity
-//qed
-admit
+  assume l IHl
+  rewrite IHl reflexivity
+qed
 
 // Lemma special_case : forall l a, cons a l = app [a] l.
 // Proof.
@@ -928,9 +929,8 @@ admit
 // Defined.
 theorem special_case : ∀A (l:L A) a, π (cons a l = app (cons a nil) l)
 proof
-  assume A l x simpl
-  //refine eq_refl (list A) (cons x l) // Cannot apply reflexivity
-admit
+  assume A l x simpl reflexivity
+qed
 
 // Lemma reverse_bis_concat : forall l1 l2,  
 // reverse_bis (app l1 l2) = 
@@ -942,15 +942,16 @@ admit
 //    rewrite IHl1. 
 //    apply app_assoc.
 // Defined. 
-theorem reverse_concat : ∀A (l1 l2:L A), π (reverse (app l1 l2) = app (reverse l2) (reverse l1))
+theorem reverse_concat : ∀A (l1 l2:L A), π ((reverse (app l1 l2)) = app (reverse l2) (reverse l1))
 proof
   assume A l1 l2
-  apply list_ind (λz, reverse (app z l2) = app (reverse l2) (reverse z)) _ _ l1
+  apply list_ind (λz, (reverse (app z l2)) = (app (reverse l2) (reverse z))) _ _ l1
   simpl
-  // refine eq_sym (reverse l2) (app (reverse l2) nil)
-  // rewrite app_nil A (reverse l2) reflexivity
-  // simpl assume l2 rewrite IHl1 apply app_assoc
-admit // problem
+  //refine eq_sym (reverse l2) (app (reverse l2) nil)
+  rewrite app_nil A (reverse l2) reflexivity
+
+  simpl assume x l2 IHl1 rewrite IHl1 apply app_assoc A (reverse l2) (reverse l3) (cons x nil)
+qed
 
 // Lemma fixpoint_prop_bis : forall l, 
 // reverse_bis (reverse_bis l) = l.
@@ -960,11 +961,21 @@ admit // problem
 //  * rewrite special_case.
 //    repeat rewrite reverse_bis_concat.
 //    simpl. rewrite IHl. reflexivity.
-// Defined.
-                                                
+// Defined.                              
 theorem fixpoint_reverse : ∀A (l:L A), π (reverse (reverse l) = l)
 proof
-admit//@TODO 8
+  assume A l
+  apply list_ind (λz, reverse (reverse z) = z) _ _
+  // 0. π (reverse (reverse nil) = nil)
+  reflexivity
+  // 1. ∀(x:τ A) (l0:τ (list A)), π (reverse (reverse l0) = l0) ⇒ π (reverse (reverse (x ⸬ l0)) = (x ⸬ l0))
+  assume x l0 IHl
+  simpl
+  //rewrite reverse_concat
+  //rewrite special_case
+  //rewrite reverse_bis_concat rewrite reverse_bis_concat rewrite reverse_bis_concat
+  //simpl rewrite IHl reflexivity
+admit //@TODO 4 probleme : "Uncaught [File "src/core/infer.ml", line 55, characters 55-61: Assertion failed]."
 
 //////////////////////////
 //  Exercice 5 - Prédicat inductif
@@ -1078,7 +1089,7 @@ proof
   //simpl assume Heven0 apply even_0_coq                             
   //simpl assume x Himpl HevenSx //assume n assume Heven
                                   
-qed//@TODO 9
+qed//@TODO 5
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
@@ -1090,7 +1101,7 @@ qed//@TODO 9
 //Qed.
 theorem even5_nonsense : π (even 5) ⇒ π ((plus 2 2) = 9)
 proof
-admit //@TODO 10
+admit //@TODO 6
 
 //Lemma ev_even : forall n,
 //  even n -> exists k, n = 2 * k.
@@ -1110,7 +1121,7 @@ admit //@TODO 10
 //Qed.
 theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = 2*k))
 proof
-admit //@TODO 11
+admit //@TODO 7
 
 //  Prouver les lemmes suivants.
 
@@ -1119,21 +1130,21 @@ admit //@TODO 11
 //Admitted.
 theorem even_n_disj_Sn : ∀n, π (even n ∨ even (S n))
 proof
-admit //@TODO 12
+admit //@TODO 8
 
 //Lemma even_n_neg_Sn : forall n, even n -> ~ even (S n).
 //Proof.
 //Admitted.
 theorem even_n_neg_Sn : ∀n, π (even n) ⇒ π (¬ (even (S n)))
 proof
-admit //@TODO 13
+admit //@TODO 9
 
 //Lemma even_dec : forall n, even n \/ ~ even n.
 //Proof.
 //Admitted.
 theorem even_dec : ∀n, π (even n ∨ ¬(even (S n)))
 proof
-admit //@TODO 14
+admit //@TODO 10
 
 //  Induction de 2 en 2.
 //Lemma two_steps_induction : forall P : nat -> Prop, P 0 -> P 1 ->
@@ -1146,13 +1157,13 @@ admit //@TODO 14
 theorem two_steps_induction :
 ∀(p : N ⇒ Prop), π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (S (S n)))) ⇒ π (forall (λn, p n))
 proof
-admit //@TODO 15
+admit //@TODO 11
 
 // Définir [evenb : nat -> bool] qui teste si un entier est pair.
 
 //Fixpoint evenb (n:nat) : bool.
 //Admitted.
-symbol evenb : N ⇒ B//@TODO 16
+symbol evenb : N ⇒ B//@TODO 12
 
 //    Prouver les lemmes suivants. Si vous avez besoin de résultats sur les
 //    booléens, vous pouvez les trouver dans [Bool]
@@ -1163,21 +1174,21 @@ symbol evenb : N ⇒ B//@TODO 16
 //Admitted.
 theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
 proof
-admit //@TODO 17
+admit //@TODO 13
 
 //Lemma evenb_complete : forall n, even n -> evenb n = true.
 //Proof.
 //Admitted.
 theorem evenb_complte : ∀n, π (even n) ⇒  π (evenb n = true)
 proof
-admit //@TODO 18
+admit //@TODO 14
                    
 //Definition evenb_spec : forall n, evenb n = true <-> even n.
 //Proof.
 //Admitted.
 theorem evenb_spec : ∀n, π (evenb n = true ⇔ even n)
 proof
-admit //@TODO 19
+admit //@TODO 15
 
 // Prouver [even_dec_bis : forall n, even n \/ ~ even n] en utilisant [evenb_spec].
 
@@ -1186,7 +1197,7 @@ admit //@TODO 19
 //Admitted.
 theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
 proof
-admit //@TODO 20
+admit //@TODO 16
 
 /////////////////////////////////
 // Exercice 6 - Dernier retour sur les listes
@@ -1194,17 +1205,13 @@ admit //@TODO 20
 
 //Variable A : Type.
 //
-//Inductive mem : A -> list A -> Prop :=             //@TODO 21
+//Inductive mem : A -> list A -> Prop := 
 //  mem_head : forall x l, mem x (cons x l)
 //| mem_tail : forall x y l, 
 //   mem x l -> mem x (cons y l).
 symbol mem {A} : τ A ⇒ L A ⇒ Prop
-constant symbol mem_head (x:τ _) l   : π (mem x (cons x l))
-constant symbol mem_tail x y l : π (imp (mem x l) (mem x (cons y l))) 
-// constant symbol list : Set ⇒ Set
-// definition L a ≔ τ (list a)
-// constant symbol nil {a} : L a
-// constant symbol cons {a} : τ a ⇒ L a ⇒ L a
+constant symbol mem_head {A} (x:τ A)   (l:L A) : π (mem x (cons x l))
+constant symbol mem_tail {A} (x y:τ A) (l:L A) : π (imp (mem x l) (mem x (cons y l))) 
 
 // Check app.
 type app
@@ -1215,13 +1222,13 @@ type app
 //mem x l1 -> mem x (app l1 l2).
 //Proof.
 //Admitted.
-theorem app_left : ∀l1 l2 x, π ((mem x l1) (mem x (app l1 l2)))
+theorem app_left : ∀A (l1 l2: L A) (x:τ A), π (mem x l1) ⇒ π (mem x (app l1 l2))
 proof
-admit //@TODO 22
+admit //@TODO 17
 
 //Lemma app_or : forall l1 l2 x, mem x (app l1 l2) -> mem x l1 \/ mem x l2.
 //Proof.
 //Admitted.
-theorem app_or : ∀l1 l2 x, π ((mem x (app l1 l2)) ((mem x l1) ∨ (mem x l2)))
+theorem app_or : ∀A (l1 l2: L A) (x:τ A), π (mem x (app l1 l2)) ⇒ π ((mem x l1) ∨ (mem x l2))
 proof
-admit //@TODO 23
+admit //@TODO 18
