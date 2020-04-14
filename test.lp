@@ -1,5 +1,5 @@
 require open amelie.notation
-require open amelie.Logic
+//require open amelie.Logic
                                   
 // //////////////////////// Entiers naturels
                   
@@ -11,7 +11,7 @@ set infix right 6 "+" ≔ plus
                                   
 // //////////////////////// Logique sur les booléens
 
-//require open amelie.Logic
+require open amelie.Logic
 
 // ...
 
