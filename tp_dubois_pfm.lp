@@ -1116,9 +1116,9 @@ admit //@TODO 6 inversion
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
-//theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = 2*k))
-//proof
-//admit //@TODO 7 type
+theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = (2*k)))
+proof
+admit //@TODO 7
 
 //  Prouver les lemmes suivants.
 
