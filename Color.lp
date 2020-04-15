@@ -1,12 +1,12 @@
 // Inspiré de Software_Foundations/lf/Basics.html
-require open amelie.notation
+require open amelie.Notation
 require open amelie.Bool
 require open amelie.Logic
 
 ///////////////////////////////////////
 // Definitions of type
 ///////////////////////////////////////
-                                  
+
 //Inductive rgb : Type :=
 //  | red
 //  | green
@@ -40,7 +40,7 @@ symbol coldisj_ind :
 
 
 //////////////////////////////////////////
-// Some functions         
+// Some functions
 //////////////////////////////////////////
 
 //Definition monochrome (c : color) : bool :=
@@ -67,7 +67,7 @@ rule isred black           → false
  and isred (primary red)   → true
  and isred (primary green) → false
  and isred (primary blue)  → false
-                             
+
 // Definition isgreen (c : color) : bool :=
 //   match c with
 //   | black => false
@@ -81,7 +81,7 @@ rule isgreen black           → false
  and isgreen (primary green) → true
  and isgreen (primary red)   → false
  and isgreen (primary blue)  → false
-                               
+
 // Definition isblue (c : color) : bool :=
 //   match c with
 //   | black => false
@@ -101,9 +101,9 @@ rule isblue black           → false
 ////////////////////////////////////
 
 //assert p q r s ⊢ ∀n, π (p ⊃ q ∨ r ∨ s)
-                              
-// Theorem my_coldisj_test : 
-// forall c, isred c = true \/ isgreen c =true \/ isblue c = true 
+
+// Theorem my_coldisj_test :
+// forall c, isred c = true \/ isgreen c =true \/ isblue c = true
 // <-> monochrome c = false.
 // Proof.
 // split;intro myHyp.
@@ -129,7 +129,7 @@ rule isblue black           → false
 //         - right. left.  reflexivity.
 //         - right. right. reflexivity.
 // Qed.
-                              
+
 // constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
 symbol my_P : B ⇒ Prop
 rule my_P true  → ⊤
@@ -142,12 +142,12 @@ rule my_P true  → ⊤
      //eq_ind
      //: forall (A : Type) (x : A) (P : A -> Prop),
      //'  P x -> forall y : A, x = y -> P y
-         
+
 theorem discriminate : π (false = true) ⇒ π ⊥
 proof
   assume H
   apply eq_ind false true H my_P
-  apply I 
+  apply I
 qed
 
 // theorem discriminate_2 : π (true = false) ⇒ π ⊥
@@ -155,11 +155,11 @@ qed
 //   rewrite eq_sym
 //   assume H
 //   apply eq_ind true false H my_P
-//   reflexivity     
+//   reflexivity
 // qed
 
 
-///////////////////////////                        
+///////////////////////////
 // Right to left (RGB)
 ///////////////////////////
 theorem right_to_left_rgb : ∀n,
@@ -182,7 +182,7 @@ proof
   reflexivity
 qed
 
-///////////////////////////                        
+///////////////////////////
 // Right to left (color)
 ///////////////////////////
 theorem right_to_left_color :
@@ -198,10 +198,10 @@ proof
   apply false_elim apply discriminate symmetry apply Htruefalse
   // Goal primary
   assume rgb
-  apply right_to_left_rgb rgb    
+  apply right_to_left_rgb rgb
 qed
 
-///////////////////////////                        
+///////////////////////////
 // Left to right (RGB)
 ///////////////////////////
 theorem left_to_right_rgb : ∀(n:RGB),
@@ -216,7 +216,7 @@ proof
   simpl assume Hyp reflexivity
 qed
 
-///////////////////////////                        
+///////////////////////////
 // Left to right (color)
 ///////////////////////////
 theorem left_to_right_color :
@@ -234,7 +234,7 @@ proof
      // 2. π ((false = true) ∨ (false = true)) ⇒ π (true = false)
      assume Hor2 apply disj_elim (false = true) (false = true) apply Hor2
            assume Hfalsetrue symmetry apply Hfalsetrue
-           assume Hfalsetrue symmetry apply Hfalsetrue              
+           assume Hfalsetrue symmetry apply Hfalsetrue
   // Goal white
   simpl assume Hor
   apply disj_elim (false = true) ((false = true) ∨ (false = true))
@@ -245,18 +245,16 @@ proof
      // 2. π ((false = true) ∨ (false = true)) ⇒ π (true = false)
      assume Hor2 apply disj_elim (false = true) (false = true) apply Hor2
            assume Hfalsetrue symmetry apply Hfalsetrue
-           assume Hfalsetrue symmetry apply Hfalsetrue          
+           assume Hfalsetrue symmetry apply Hfalsetrue
   // Goal primary
   assume rgb
-  apply left_to_right_rgb rgb  
+  apply left_to_right_rgb rgb
 qed
 
 ///////////////////////////////////
 // Version ⇔
 ///////////////////////////////////
-definition equiv (A B : Prop) ≔ (A ⊃ B) ∧ (B ⊃ A)
-set infix left 7 "⇔" ≔ equiv
-                       
+
 theorem my_coldisj_test :
 ∀c, π ((isred c = true ∨ isgreen c = true ∨ isblue c = true) ⇔ (monochrome c = false))
 proof
@@ -292,13 +290,13 @@ proof
   refine rgb_ind (λz, imp (eq {bool} (isred (primary z)) true) (eq {bool} (monochrome (primary z)) false)) ?CR[c] ?CG[c] ?CB[c]
   simpl
   assume Hred
-  reflexivity   
+  reflexivity
   //
   simpl
   assume Hred
-  reflexivity   
+  reflexivity
   //
   simpl
   assume Hred
-  reflexivity       
+  reflexivity
 qed

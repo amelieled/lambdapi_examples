@@ -1,4 +1,4 @@
-require open amelie.notation
+require open amelie.Notation
 
 // Conjunction
 constant symbol conj : Prop ⇒ Prop ⇒ Prop
@@ -17,7 +17,7 @@ constant symbol disj_intro_right p q : π q ⇒ π (p ∨ q)
 symbol disj_elim p q r : π (p ∨ q) ⇒ (π p ⇒ π r) ⇒ (π q ⇒ π r) ⇒ π r
 
 // assert p q r ⊢ p ∨ q ∧ r ≡ p ∨ (q ∧ r) // check that propositions are parsed correctly
-  
+
 // False
 set declared "⊥"
 constant symbol ⊥ : Prop
@@ -47,6 +47,10 @@ rule π (&p ⊃ &q) → π &p ⇒ π &q
 // assert p q r s ⊢ p ∧ q ⊃ r ∨ s ≡ (p ∧ q) ⊃ (r ∨ s)
 
 // assert a (x y : τ a) ⊢ x = y ∧ x = y ⊃ x = y ∨ x = y ≡ (x = y ∧ x = y) ⊃ (x = y ∨ x = y)
+
+// Equivalence
+definition equiv (p q : Prop) ≔ (p ⊃ q) ∧ (q ⊃ p)
+set infix left 7 "⇔" ≔ equiv
 
 // Universal quantification
 constant symbol forall {a} : (τ a ⇒ Prop) ⇒ Prop
