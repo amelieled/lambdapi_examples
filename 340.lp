@@ -1,4 +1,4 @@
-require open amelie.notation
+require open amelie.Notation
 require open amelie.Bool
 require open amelie.Logic
 

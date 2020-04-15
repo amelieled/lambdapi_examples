@@ -253,7 +253,7 @@ proof
   assume A l1 l2 x
   apply list_ind (λz, mem x (z⋅l2) ⊃ (mem x z) ∨ (mem x l2)) _ _ l1
   // 0. π (mem x (app nil l2)) ⇒ π (mem x nil ∨ mem x l2)
-  simpl assume Hmeml2 apply disj_intro_right apply Hmeml2
+  simpl assume Hmeml2 apply disj_intro_right refine Hmeml2
 //1. ∀(x0:τ A) (l:τ (list A)),
 //     (π (mem x (app l l2)) ⇒ π (mem x l ∨ mem x l2))
 // ⇒ π (mem x (app (x0 ⸬ l) l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)

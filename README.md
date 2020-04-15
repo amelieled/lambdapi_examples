@@ -1,6 +1,6 @@
 Content of files :
 
-   - <number>.lp: linking with the issue n°<number>
+   - (number).lp: linking with the issue n°(number)
    
    - Notation.lp: general notations :
                      Proposition type + Set type + Leibniz equality
