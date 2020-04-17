@@ -408,9 +408,18 @@ qed
 //   apply evenb_complete in H0.
 //   rewrite H in H0. inversion H0.
 //Defined.
+symbol bool_case :
+∀p b, π((b = true) ⊃ (p b)) ⇒ π((false = b) ⊃ (p false)) ⇒ π(p b)
+
 theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
 proof
   assume n
-  //rewrite evenb_spec n
-  //refine bool_ind (λb, (even n ∨ ¬(even n))) _ _ (evenb n)
-admit //@TODO even_6 destruct eqn + inversion
+  refine bool_case (λb, (even n ∨ ¬(even n))) (evenb n) _ _
+  // 0. π (evenb n = true) ⇒ π (even n ∨ ¬ (even n))
+  assume Hevenbtrue apply disj_intro_left refine evenb_correct n Hevenbtrue
+  // 1. π (evenb n = false) ⇒ π (even n ∨ ¬ (even n))
+  assume Hevenbfalse apply disj_intro_right assume Hevenn
+  apply discr_f_t
+  rewrite Hevenbfalse
+  refine evenb_complete n Hevenn
+qed //@DONE even_6 destruct eqn + inversion
