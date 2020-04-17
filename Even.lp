@@ -2,7 +2,7 @@ require open amelie.Notation
 require open amelie.Logic
 require open amelie.Bool
 require open amelie.Nat
-require open amelie.Op_bool
+//require open amelie.Op_bool
 
 //////////////////////////
 //  Un exemple de prédicat inductif : even
@@ -147,9 +147,22 @@ admit //@TODO 6 inversion
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
+symbol even_ind : ∀p, π (p 0) ⇒ (∀n, π (even n) ⇒ π (p n) ⇒ π (p (succ (succ n)))) ⇒ ∀n, π (even n) ⇒ π (p n)
+
 theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = (2×k)))
 proof
-admit //@TODO 7
+  refine even_ind _ _ _
+  // 0. π (∃ (λk, zero = (succ (succ zero) × k)))
+  apply ex_intro _ 0 reflexivity
+  // 1. ∀(n:τ nat), π (even n) ⇒ π (∃ (λk, n = (succ (succ zero) × k))) ⇒ π (∃ (λk, succ (succ n) = (succ (succ zero) × k)))
+  assume n Hevenn Hex
+  apply ex_elim (λk, n = (succ (succ zero) × k)) apply Hex
+  assume x Hx apply ex_intro _ (x+1) rewrite Hx simpl
+  rewrite plus_n_Sm
+//    replace (k' + 0) with k'. reflexivity.
+  rewrite plus_n_0 rewrite plus_n_0 simpl
+  rewrite plus_n_Sm simpl reflexivity
+qed
 
 //  Prouver les lemmes suivants.
 
@@ -200,9 +213,18 @@ admit //@TODO 8 inversion
 //  * right. intro H. apply even_n_not_succn in H.
 //    contradiction.
 //Defined.
-theorem even_dec : ∀n, π (even n ∨ ¬(even (succ n)))
+theorem even_dec : ∀n, π (even n ∨ ¬(even n))
 proof
-admit //@TODO 9 assert
+  assume n
+  apply disj_elim (even n) (even (succ n))
+  apply even_n_disj_succn n
+     // 0. π (even n) ⇒ π (even n ∨ ¬ (even (succ n)))
+     assume Hn apply disj_intro_left apply Hn
+     //1. π (even (succ n)) ⇒ π (even n ∨ ¬ (even (succ n)))
+     assume Hsuccn apply disj_intro_right
+     assume Hn
+     refine even_n_neg_succn n Hn Hsuccn
+qed
 
 //  Induction de 2 en 2.
 //Lemma two_steps_induction : forall P : nat -> Prop, P 0 -> P 1 ->
@@ -220,13 +242,39 @@ admit //@TODO 9 assert
 //      + assert(P n /\ P (succ n)) by (apply Hn).
 //        decompose [and] H. assumption.
 //Defined.
+theorem assert_for_two_steps_induction : ∀p, π (p 0) ⇒ π (p 1) ⇒
+(∀n, π (p n) ⇒ π (p (succ (succ n)))) ⇒
+(∀n, π (p n ∧ p (succ n)))
+proof
+  assume p Hp0 Hp1 Hn
+  refine nat_ind _ _ _
+  // 0. π (p zero ∧ p (succ zero))
+  apply conj_intro refine Hp0 apply Hp1
+  // 1. ∀(x:τ nat), π (p x ∧ p (succ x)) ⇒ π (p (succ x) ∧ p (succ (succ x)))
+  assume x Hx
+  apply conj_intro
+         // 0. π (p (succ x))
+         apply conj_elim_right (p x) apply Hx
+         //1. π (p (succ (succ x)))
+         apply Hn x
+         apply conj_elim_left _ (p (succ x)) apply Hx
+qed
+
 theorem two_steps_induction : ∀(p : ℕ ⇒ Prop),
 π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (succ (succ n)))) ⇒
 π (forall (λn, p n))
 proof
-  assume p Hp0 Hp1 IHn x //(forall n, P n /\ P (succ n))
-
-admit //@TODO 10 assert
+  assume p Hp0 Hp1 IHn
+  refine nat_ind _ _ _
+  // 0. π (p zero)
+  apply Hp0
+  //1. ∀(x:τ nat), π (p x) ⇒ π (p (succ x))
+  //assert(P n /\ P (succ n)) by (apply Hn).
+//        decompose [and] H. assumption
+  assume x Hx
+  apply conj_elim_right (p x)
+  refine assert_for_two_steps_induction p Hp0 Hp1 IHn x
+qed
 
 // Définir [evenb : nat -> bool] qui teste si un entier est pair.
 

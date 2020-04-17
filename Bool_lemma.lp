@@ -77,6 +77,35 @@ proof
   apply I
 qed
 
+symbol if {a} : B ⇒ a ⇒ a ⇒ a
+rule if true  &t _  → &t
+ and if false _  &f → &f
+
+definition my_second_P ≔ λb, if b ⊤ ⊥
+
+theorem discr_2 : π (false = true) ⇒ π ⊥
+proof
+  assume H
+  apply eq_ind false true H my_second_P
+  apply I
+qed
+
+definition test ≔ λl r H, eq_ind l r H my_second_P
+theorem discrd:  π (false = true) ⇒ π ⊥
+proof
+  assume H
+  apply test false true H
+  apply I
+qed
+
+//constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
+
+symbol testj (x y:B) (H:(λx y, π(x=y))x y) : TYPE
+
+type testj true
+
+//definition test ≔(λl r, (λb, if b = r ⊤ ⊥)  l = r)
+
 //theorem andb_prop : // Il me manque un outil pour y arriver avec cet énoncé
 //∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))

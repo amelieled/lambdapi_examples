@@ -1,5 +1,5 @@
 require open amelie.Notation
-require open amelie.Logic
+//require open amelie.small
 
 // //////////////////////// Entiers naturels
 /////////////////////////////////////////////
@@ -24,7 +24,7 @@ rule       0 + &y → &y
 
 // //////////////////////// Logique sur les booléens
 
-//require open amelie.Logic
+//require open amelie.small
 
 // ...
 
