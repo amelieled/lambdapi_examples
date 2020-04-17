@@ -214,12 +214,12 @@ qed
 //| mem_tail : forall x y l,
 //   mem x l -> mem x (cons y l).
 symbol mem {A} : τ A ⇒ 𝕃A ⇒ Prop
-constant symbol mem_head {A} (x:τ A)   (l:𝕃A) : π (mem x (x⸬l))
+constant symbol mem_head {A} (x  :τ A) (l:𝕃A) : π (mem x (x⸬l))
 constant symbol mem_tail {A} (x y:τ A) (l:𝕃A) :
   π ((mem x l) ⊃ (mem x (y⸬l)))
 
 symbol notMemnil {A} : ∀(x:τ A), π (mem x □) ⇒ π (⊥)
-//symbol mem_inv
+symbol mem_inv {A} (x y : τ A) (l:𝕃A) : π ((mem x (y⸬l) ⊃ (x = y ∨ mem x l)))
 // Check app.
 type app
 
@@ -242,9 +242,18 @@ proof
   assume x x0 Hmemnil apply false_elim apply notMemnil x0 apply Hmemnil
   // 1. ∀(x:τ A) (l:τ (list A)), (∀(x:τ (list A)) (x0:τ A), π (mem x0 l) ⇒ π (mem x0 (l ⋅ x)))
   //            ⇒ ∀(x0:τ (list A)) (x1:τ A), π (mem x1 (x ⸬ l)) ⇒ π (mem x1 ((x ⸬ l) ⋅ x0))
-  assume x l1 IHl1 l2 x2 Hl1
-  simpl
-qed //@TODO 14 inversion
+  simpl assume x l1 IHl1 l2 x2 Hl1
+  apply disj_elim (x2=x) (mem x2 l1)
+        // 0. π ((x2 = x) ∨ mem x2 (l1 ⋅ l2))
+        apply mem_inv x2 x l1 Hl1
+        // 1. π (x2 = x) ⇒ π (mem x2 (x ⸬ (l1 ⋅ l2)))
+        assume Heqx2x rewrite Heqx2x apply mem_head x (l1⋅l2)
+        // 2. π (mem x2 l1) ⇒ π (mem x2 (x ⸬ (l1 ⋅ l2)))
+        assume Hl1
+        simpl //apply disj_intro_right apply Hmeml2
+        refine mem_tail x2 x (l1⋅l2) _
+        apply IHl1 l2 x2 Hl2
+qed //@DONE poly_list_1 inversion
 
 //Lemma app_or : forall l1 l2 x, mem x (app l1 l2) -> mem x l1 \/ mem x l2.
 //Proof.
@@ -267,6 +276,23 @@ proof
 //1. ∀(x0:τ A) (l:τ (list A)),
 //     (π (mem x (app l l2)) ⇒ π (mem x l ∨ mem x l2))
 // ⇒ π (mem x (app (x0 ⸬ l) l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
-  assume x0 l Hyp1 Hyp2
-  simpl
-admit //@TODO 15 inversion
+  simpl assume x0 l Hyp1 Hyp2
+  apply disj_elim (x=x0) (mem x (l⋅l2))
+  // 0. π ((x = x0) ∨ mem x (l ⋅ l2))
+  apply mem_inv x x0 (l⋅l2) Hyp2
+  // 1. π (x = x0) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+  assume Heqxx0
+  apply disj_intro_left rewrite Heqxx0 apply mem_head x0 l
+  // 2. π (mem x (l ⋅ l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+  assume Hmem
+  apply disj_elim (mem x l) (mem x l2)
+        // 0. π (mem x l ∨ mem x l2)
+        apply Hyp1 apply Hmem
+        // 1. π (mem x l) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+        assume Hmeml
+        apply disj_intro_left
+        refine mem_tail x x0 l _ refine Hmeml // OU apply mem_tail x x0 l Hmeml
+        // 2. π (mem x l2) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+        assume Hmeml2
+        apply disj_intro_right apply Hmeml2
+qed //@DONE poly_list_2 inversion
