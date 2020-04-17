@@ -2,6 +2,7 @@
 require open amelie.Notation
 require open amelie.Bool
 require open amelie.Logic
+require open amelie.Bool_discriminate
 
 ///////////////////////////////////////
 // Definitions of type
@@ -100,8 +101,6 @@ rule isblue black           → false
 // A proof of : forall c, isred c = true \/ isgreen c = true \/ isblue c = true <-> monochrome c = false
 ////////////////////////////////////
 
-//assert p q r s ⊢ ∀n, π (p ⊃ q ∨ r ∨ s)
-
 // Theorem my_coldisj_test :
 // forall c, isred c = true \/ isgreen c =true \/ isblue c = true
 // <-> monochrome c = false.
@@ -129,35 +128,6 @@ rule isblue black           → false
 //         - right. left.  reflexivity.
 //         - right. right. reflexivity.
 // Qed.
-
-// constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
-symbol my_P : B ⇒ Prop
-rule my_P true  → ⊤
- and my_P false → ⊥
-// fun H : true = false =>
-// let H0 : False :=
-//   eq_ind true (fun e : bool => if e then True else False) I false H in
-     //     False_ind False H0
-
-     //eq_ind
-     //: forall (A : Type) (x : A) (P : A -> Prop),
-     //'  P x -> forall y : A, x = y -> P y
-
-theorem discriminate : π (false = true) ⇒ π ⊥
-proof
-  assume H
-  apply eq_ind false true H my_P
-  apply I
-qed
-
-// theorem discriminate_2 : π (true = false) ⇒ π ⊥
-// proof
-//   rewrite eq_sym
-//   assume H
-//   apply eq_ind true false H my_P
-//   reflexivity
-// qed
-
 
 ///////////////////////////
 // Right to left (RGB)
@@ -192,10 +162,10 @@ proof
   apply coldisj_ind (λz, (monochrome z) = false ⊃ (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true) _ _ _ c
   // Goal black
   simpl assume Htruefalse
-  apply false_elim apply discriminate symmetry apply Htruefalse
+  apply false_elim apply discr_f_t symmetry apply Htruefalse
   // Goal white
   simpl assume Htruefalse
-  apply false_elim apply discriminate symmetry apply Htruefalse
+  apply false_elim apply discr_f_t symmetry apply Htruefalse
   // Goal primary
   assume rgb
   apply right_to_left_rgb rgb

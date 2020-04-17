@@ -1,3 +1,4 @@
+require open amelie.Bool_discriminate
 require open amelie.Bool
 require open amelie.Logic
 require open amelie.Notation
@@ -60,52 +61,6 @@ qed
 //      * simpl in H. discriminate H. (* false <> true *)
 //      * simpl in H. discriminate H. (* false <> true *)
 //Qed.
-//set declared "<>"
-//definition diff a b ≔ ¬(eq a b)
-//set infix left 6 <> ≔ diff
-
-// symbol false_elim p : π ⊥ ⇒ π p
-
-symbol my_P : B ⇒ Prop
-rule my_P true  → ⊤
- and my_P false → ⊥
-
-theorem discr : π (false = true) ⇒ π ⊥
-proof
-  assume H
-  apply eq_ind false true H my_P
-  apply I
-qed
-
-symbol if {a} : B ⇒ a ⇒ a ⇒ a
-rule if true  &t _  → &t
- and if false _  &f → &f
-
-definition my_second_P ≔ λb, if b ⊤ ⊥
-
-theorem discr_2 : π (false = true) ⇒ π ⊥
-proof
-  assume H
-  apply eq_ind false true H my_second_P
-  apply I
-qed
-
-definition test ≔ λl r H, eq_ind l r H my_second_P
-theorem discrd:  π (false = true) ⇒ π ⊥
-proof
-  assume H
-  apply test false true H
-  apply I
-qed
-
-//constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
-
-symbol testj (x y:B) (H:(λx y, π(x=y))x y) : TYPE
-
-type testj true
-
-//definition test ≔(λl r, (λb, if b = r ⊤ ⊥)  l = r)
-
 //theorem andb_prop : // Il me manque un outil pour y arriver avec cet énoncé
 //∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))
@@ -124,7 +79,7 @@ proof
   simpl
   assume H
   apply false_elim (false = true ∧ b2 = true)
-  apply discr apply H
+  apply discr_f_t apply H
 qed
 
 //[andb_true_iff : forall b1 b2,andb b1 b2 = true <-> b1 = true /\ b2 = true]
@@ -149,7 +104,7 @@ proof
   apply conj_intro
     assume H
       apply false_elim (false = true ∧ b2 = true)
-      apply discr apply H
+      apply discr_f_t apply H
   assume H apply conj_elim_left _ (b2 = true) apply H
 qed
 
@@ -170,6 +125,6 @@ proof
   apply conj_intro
     assume H apply disj_intro_right apply H
     assume H apply disj_elim (false = true) (b2 = true) (b2 = true) apply H
-      assume Hfalse apply false_elim (b2 = true) apply discr apply Hfalse
+      assume Hfalse apply false_elim (b2 = true) apply discr_f_t apply Hfalse
       assume H2 apply H2
 qed

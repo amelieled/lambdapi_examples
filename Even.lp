@@ -1,5 +1,6 @@
 require open amelie.Notation
 require open amelie.Logic
+require open amelie.Bool_discriminate
 require open amelie.Bool
 require open amelie.Nat
 //require open amelie.Op_bool
@@ -56,6 +57,13 @@ constant symbol even_SS n : π (imp (even n) (even (succ (succ n))))
 constant symbol even_0_coq : π (even 0)
 constant symbol even_SS_coq n : π (even n) ⇒ π (even (succ (succ n)))
 
+symbol even_ind : ∀p, π (p 0) ⇒ (∀n, π (even n) ⇒ π (p n) ⇒ π (p (succ (succ n)))) ⇒ ∀n, π (even n) ⇒ π (p n)
+
+// symbol even_inject : ∀n, (π (n = 0) ⇒ π (even 0))
+//   ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))) ⇒ π (even n))
+// symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0))
+//   ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))))
+
 //Lemma even_4 : even 4.
 //Proof.
 //apply even_SS. apply even_SS. apply even_0.
@@ -94,10 +102,6 @@ proof
   apply Heven
 qed
 
-symbol even_inject : ∀n, (π (n = 0) ⇒ π (even 0))
-  ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))) ⇒ π (even n))
-symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0))
-  ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))))
 //Theorem ev_minus2 : forall n,
 //  even n -> even (pred (pred n)).
 //Proof.
@@ -110,14 +114,30 @@ symbol pred : ℕ ⇒ ℕ
 rule pred     0     → 0
  and pred (succ &n) → &n
 
+theorem succ_pred : ∀n, π (¬ (n = 0)) ⇒ π (succ (pred n) = n) // inutile
+proof
+  refine nat_ind _ _ _
+  // 0. (π (zero = zero) ⇒ π ⊥) ⇒ π (succ (pred zero) = zero)
+  simpl assume Hfalse apply false_elim apply Hfalse reflexivity
+  // 1. ∀(x:τ nat), ((π (x = zero) ⇒ π ⊥) ⇒ π (succ (pred x) = x)) ⇒ (π (succ x = zero) ⇒ π ⊥)
+  //                         ⇒ π (succ (pred (succ x)) = succ x)
+  assume x Hnotzero Hsuccpredx
+  reflexivity
+qed
+
+symbol even_inv : ∀n, π (even (succ (succ n))) ⇒ π (even n)
+symbol notEven1 : π (even 1) ⇒ π (⊥)
+
 theorem ev_minus2 : ∀n, π (imp (even n) (even (pred (pred n))))
 proof
-  assume n Heven
-  //apply even_inj
-  //apply nat_ind (λz, imp (even z) (even (pred (pred z)))) _ _ n
-         //simpl assume Heven0 apply even_0_coq
-         //simpl assume x Himpl Hevensuccx //assume n assume Heven
-admit//@TODO 5 inversion
+  //assume n Heven
+  refine even_ind _ _ _
+  //0. π (even (pred (pred zero)))
+  simpl apply even_0
+  //1. ∀(n:τ nat), π (even n) ⇒ π (even (pred (pred n))) ⇒ π (even (pred (pred (succ (succ n)))))
+  assume n Heven Hpredpred
+  simpl apply Heven
+qed// @DONE even_1 inversion
 
 //Theorem even5_nonsense :
 //  even 5 -> 2 + 2 = 9.
@@ -129,7 +149,12 @@ admit//@TODO 5 inversion
 //Qed.
 theorem even5_nonsense : π (even 5) ⇒ π ((2+2) = 9)
 proof
-admit //@TODO 6 inversion
+  assume H5
+  apply false_elim
+  apply notEven1
+  apply even_inv (succ zero)
+  apply even_inv (succ (succ (succ zero))) apply H5
+qed //@DONE even_2 inversion/adaptation
 
 //Lemma ev_even : forall n,
 //  even n -> exists k, n = 2 * k.
@@ -147,8 +172,6 @@ admit //@TODO 6 inversion
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
-symbol even_ind : ∀p, π (p 0) ⇒ (∀n, π (even n) ⇒ π (p n) ⇒ π (p (succ (succ n)))) ⇒ ∀n, π (even n) ⇒ π (p n)
-
 theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = (2×k)))
 proof
   refine even_ind _ _ _
@@ -202,7 +225,17 @@ qed
 //Defined.
 theorem even_n_neg_succn : ∀n, π (even n) ⇒ π (¬ (even (succ n)))
 proof
-admit //@TODO 8 inversion
+  refine nat_ind _ _ _
+  // 0. π (even zero) ⇒ π (even (succ zero)) ⇒ π ⊥
+  assume Heven0 refine notEven1
+  // 1. ∀(x:τ nat), (π (even x) ⇒ π (even (succ x)) ⇒ π ⊥) ⇒ π (even (succ x)) ⇒ π (even (succ (succ x))) ⇒ π ⊥
+  assume x IHx Hsucc Hsuccsucc
+  apply IHx
+        // 0. π (even x)
+        apply even_inv x refine Hsuccsucc
+        // 1. π (even (succ x))
+        apply Hsucc
+qed //@DONE even_3 inversion
 
 //Lemma even_dec : forall n, even n \/ ~ even n.
 //Proof.
@@ -298,9 +331,28 @@ rule evenb     0     → true
 //   inversion H.
 //   apply Bool.negb_involutive_reverse.
 //Defined.
+theorem neg_involutive_reverse : ∀b, π (b = neg (neg b))
+proof
+  refine bool_ind _ _ _
+  // 0. π (true = neg (neg true))
+  reflexivity
+  //1. π (false = neg (neg false))
+  reflexivity
+qed
+
 theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
 proof
-admit //@TODO 11 inversion
+  refine two_steps_induction _ _ _ _
+  // 0. π (evenb zero = true) ⇒ π (even zero)
+  assume H0 apply even_0
+  // 1. π (evenb (succ zero) = true) ⇒ π (even (succ zero))
+  simpl assume Hfalsetrue
+  apply false_elim apply discr_f_t apply Hfalsetrue
+  // 2. ∀(x:τ nat), (π (evenb x = true) ⇒ π (even x)) ⇒ π (evenb (succ (succ x)) = true) ⇒ π (even (succ (succ x)))
+  simpl assume x IHn Hsuccsucc
+  apply even_SS_coq x apply IHn
+  rewrite neg_involutive_reverse (evenb x) apply Hsuccsucc
+qed//@DONE even_4 inversion
 
 //Lemma evenb_complete : forall n, even n -> evenb n = true.
 //Proof.
@@ -312,9 +364,24 @@ admit //@TODO 11 inversion
 //   rewrite Bool.negb_involutive_reverse.
 //   rewrite H1. reflexivity.
 //Defined.
+theorem neg_involutive_reverse_trash : ∀b, π (neg (neg b) = b)
+proof
+  refine bool_ind _ _ _ reflexivity reflexivity
+qed
+
 theorem evenb_complete : ∀n, π (even n) ⇒  π (evenb n = true)
 proof
-admit //@TODO 12 inversion
+  refine two_steps_induction _ _ _ _
+  // 0. π (even zero) ⇒ π (evenb zero = true)
+  assume H0 reflexivity
+  // 1. π (even (succ zero)) ⇒ π (evenb (succ zero) = true)
+  assume Hsucc0 apply false_elim apply notEven1 apply Hsucc0
+  // 2. ∀(x:τ nat), (π (even x) ⇒ π (evenb x = true)) ⇒ π (even (succ (succ x))) ⇒ π (evenb (succ (succ x)) = true)
+  simpl assume x IHn Hsuccsucc
+  //apply even_SS_coq x apply IHn
+  rewrite neg_involutive_reverse_trash
+  apply IHn apply even_inv x apply Hsuccsucc
+qed //@DONE even_5 inversion
 
 //Definition evenb_spec : forall n, evenb n = true <-> even n.
 //Proof.
@@ -343,4 +410,7 @@ qed
 //Defined.
 theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
 proof
-admit //@TODO 13 destruct + inversion
+  assume n
+  //rewrite evenb_spec n
+  //refine bool_ind (λb, (even n ∨ ¬(even n))) _ _ (evenb n)
+admit //@TODO even_6 destruct eqn + inversion

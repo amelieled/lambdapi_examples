@@ -218,6 +218,8 @@ constant symbol mem_head {A} (x:τ A)   (l:𝕃A) : π (mem x (x⸬l))
 constant symbol mem_tail {A} (x y:τ A) (l:𝕃A) :
   π ((mem x l) ⊃ (mem x (y⸬l)))
 
+symbol notMemnil {A} : ∀(x:τ A), π (mem x □) ⇒ π (⊥)
+//symbol mem_inv
 // Check app.
 type app
 
@@ -234,7 +236,15 @@ type app
 //Defined.
 theorem app_left : ∀A (l1 l2: 𝕃A) (x:τ A), π (mem x l1) ⇒ π (mem x (l1⋅l2))
 proof
-admit //@TODO 14 inversion
+ assume A
+  refine list_ind _ _ _
+  // 0. ∀(x:τ (list A)) (x0:τ A), π (mem x0 □) ⇒ π (mem x0 (□ ⋅ x))
+  assume x x0 Hmemnil apply false_elim apply notMemnil x0 apply Hmemnil
+  // 1. ∀(x:τ A) (l:τ (list A)), (∀(x:τ (list A)) (x0:τ A), π (mem x0 l) ⇒ π (mem x0 (l ⋅ x)))
+  //            ⇒ ∀(x0:τ (list A)) (x1:τ A), π (mem x1 (x ⸬ l)) ⇒ π (mem x1 ((x ⸬ l) ⋅ x0))
+  assume x l1 IHl1 l2 x2 Hl1
+  simpl
+qed //@TODO 14 inversion
 
 //Lemma app_or : forall l1 l2 x, mem x (app l1 l2) -> mem x l1 \/ mem x l2.
 //Proof.

@@ -1,9 +1,9 @@
 // Inspiré de Software_Foundations/lf/Basics.html
-require open amelie.Polymorphic_list
 require open amelie.Op_bool
+require open amelie.Polymorphic_list
 require open amelie.Nat
 require open amelie.Bool
-require open amelie.Logic
+//require open amelie.Logic
 require open amelie.Notation
 
 // Polymorphic if

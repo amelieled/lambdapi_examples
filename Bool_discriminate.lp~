@@ -1,0 +1,49 @@
+require open amelie.Notation
+require open amelie.Logic
+require open amelie.Bool
+
+//set declared "<>"
+//definition diff a b ≔ ¬(eq a b)
+//set infix left 6 <> ≔ diff
+
+// symbol false_elim p : π ⊥ ⇒ π p
+
+symbol my_P : B ⇒ Prop
+rule my_P true  → ⊤
+ and my_P false → ⊥
+
+theorem discr_f_t : π (false = true) ⇒ π ⊥
+proof
+  assume H
+  apply eq_ind false true H my_P
+  apply I
+qed
+
+symbol if {a} : B ⇒ a ⇒ a ⇒ a
+rule if true  &t _  → &t
+ and if false _  &f → &f
+
+definition my_second_P ≔ λb, if b ⊤ ⊥
+
+theorem discr_2 : π (false = true) ⇒ π ⊥
+proof
+  assume H
+  apply eq_ind false true H my_second_P
+  apply I
+qed
+
+definition test ≔ λl r H, eq_ind l r H my_second_P
+theorem discrd:  π (false = true) ⇒ π ⊥
+proof
+  assume H
+  apply test false true H
+  apply I
+qed
+
+//constant symbol eq_ind {a} (x y : τ a) : π (x = y) ⇒ ∀p, π (p y) ⇒ π (p x)
+
+symbol testj (x y:B) (H:(λx y, π(x=y))x y) : TYPE
+
+type testj true
+
+//definition test ≔(λl r, (λb, if b = r ⊤ ⊥)  l = r)
