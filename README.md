@@ -13,6 +13,7 @@ Content of files :
                  + some examples of functions
    - Bool_lemma.lp: some easy lemmas
    - Boolean_list.lp: some easy things about boolean lists
+   - Bool_discriminate.lp: my job about discriminate on boolean
 
    - Nat.lp  : definition of type + lemmas about natural numbers
    - Op_bool.lp : eqb_nat/leb_nat/ltb_nat + lemmas about these operators 
