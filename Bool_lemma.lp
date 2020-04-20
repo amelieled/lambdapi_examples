@@ -13,7 +13,7 @@ type _ ⇒ _ // ?201 ⇒ ?199 : TYPE
 
 // Lemma bool_trivial : forall (P : bool -> Prop) b, P b -> P b.
 // Admitted.
-theorem bool_trivial : ∀p:B⇒Prop,∀b, π (p b) ⇒ π (p b)
+theorem bool_trivial : ∀p:𝔹⇒Prop,∀b, π (p b) ⇒ π (p b)
 //π (imp (P b) (P b))
 proof
   assume P b H

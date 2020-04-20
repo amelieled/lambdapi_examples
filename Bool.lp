@@ -3,9 +3,10 @@ require open amelie.Notation
 // Boolean type
 //////////////////////
 constant symbol bool : Set       // Type of booleans
-definition B ≔ τ bool
-constant symbol true  : B
-constant symbol false : B
+set declared "𝔹"
+definition 𝔹 ≔ τ bool
+constant symbol true  : 𝔹
+constant symbol false : 𝔹
 
 // Induction principle on B.
 symbol bool_ind : ∀p, π(p true) ⇒ π(p false) ⇒ ∀b, π(p b)
@@ -22,7 +23,7 @@ rule bool_ind _ &t _  true  → &t
 //  | true => false
 //  | false => true
 //  end.
-symbol neg : B ⇒ B
+symbol neg : 𝔹 ⇒ 𝔹
 rule neg true  → false
  and neg false → true
 
@@ -32,7 +33,7 @@ rule neg true  → false
 //   | true => true
 //   | false => b2
 //   end.
-symbol or : B ⇒ B ⇒ B
+symbol or : 𝔹 ⇒ 𝔹 ⇒ 𝔹
 set infix left 6 "|" ≔ or
 rule true | _  → true
  and _  | true → true
@@ -45,7 +46,7 @@ rule true | _  → true
 //  | true => b2
 //  | false => false
 //  end.
-symbol andb : B ⇒ B ⇒ B
+symbol andb : 𝔹 ⇒ 𝔹 ⇒ 𝔹
 //set infix left 5 "^" ≔ {|and|}
 rule andb true  &b    → &b
  and andb &b    true  → &b
@@ -58,7 +59,7 @@ rule andb true  &b    → &b
 
 //Definition apply_neg (f : _ -> _ -> bool) b1 b2 :=
 //  f (not b1) (not b2).
-definition apply_neg (f: _ ⇒ _ ⇒ B) b1 b2 ≔ f (neg b1) (neg b2)
+definition apply_neg (f: _ ⇒ _ ⇒ 𝔹) b1 b2 ≔ f (neg b1) (neg b2)
 
 // Check apply_neg.
 type apply_neg
@@ -77,11 +78,11 @@ definition nor_lambda ≔ apply_neg (λ_ b2, b2)
 compute nor true false
 
 // Definition idb : bool -> bool := fun b => b.
-definition idb : B ⇒ B ≔ λb, b
+definition idb : 𝔹 ⇒ 𝔹 ≔ λb, b
 
 // identique à
 // Definition idb (b : bool) := b.
-definition idb_bis b:B ≔ b
+definition idb_bis b:𝔹 ≔ b
 
 //Definition my_first := apply_neg (fun b1 => fun b2 => b1).
 definition my_first ≔ apply_neg (λb1 _, b1)
@@ -94,7 +95,7 @@ definition apply_neg_gen A (f : _ ⇒ _ ⇒ A) b1 b2 ≔
     f (neg b1) (neg b2)
 
 // Definition nor2 := apply_neg_gen bool  andb.
-definition nor2 ≔ apply_neg_gen B andb
+definition nor2 ≔ apply_neg_gen 𝔹 andb
 
 // Definition apply_neg_gen2 {A:Type} (f:_->_->A) b1 b2 :=
 //  f (not b1) (not b2).

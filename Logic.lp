@@ -31,7 +31,7 @@ symbol I : π (⊤)
 // Negation
 set declared "¬"
 constant symbol ¬ : Prop ⇒ Prop
-constant symbol neg_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
+//constant symbol neg_intro p : (π p ⇒ π ⊥) ⇒ π (¬p)
 symbol neg_elim  p : π (¬ p) ⇒ π p ⇒ π ⊥
 rule π (¬ &p) → π &p ⇒ π ⊥
 

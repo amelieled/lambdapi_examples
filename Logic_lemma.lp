@@ -45,9 +45,8 @@ theorem conj_impl_iff : ∀P Q R : Prop,
 proof
   assume P Q R
   apply conj_intro
-  simpl
-  apply conj_impl P Q R
-  apply impl_and P Q
+     apply conj_impl P Q R
+     apply impl_and P Q
 qed
 
 //Lemma impl_not : forall P : Prop, P -> ~ ~ P.

@@ -5,7 +5,6 @@ require open amelie.Logic
 ///////////////////////////////////////
 // Definitions of type
 ///////////////////////////////////////
-                                  
 constant symbol rgb : Set
 constant symbol RGB : TYPE
 rule τ rgb → RGB
@@ -28,29 +27,29 @@ constant symbol primary : RGB ⇒ C
 symbol color_ind : ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary n))) ⇒ ∀c, π (p c)
 
 //////////////////////////////////////////
-// Some functions         
+// Some functions
 //////////////////////////////////////////
 
-symbol black_or_white : C ⇒ B
+symbol black_or_white : C ⇒ 𝔹
 rule black_or_white black     → true
  and black_or_white white     → true
  and black_or_white (primary _) → false
 
-symbol isred : C ⇒ B
+symbol isred : C ⇒ 𝔹
 rule isred black       → false
  and isred white       → false
  and isred (primary red) → true
  and isred (primary green) → false
  and isred (primary blue) → false
 
-symbol isgreen : C ⇒ B
+symbol isgreen : C ⇒ 𝔹
 rule isgreen black       → false
  and isgreen white       → false
  and isgreen (primary red) → false
  and isgreen (primary green) → true
  and isgreen (primary blue) → false
                            
-symbol isblue : C ⇒ B
+symbol isblue : C ⇒ 𝔹
 rule isblue black       → false
  and isblue white       → false
  and isblue (primary red) → false

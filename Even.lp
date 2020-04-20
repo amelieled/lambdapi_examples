@@ -167,8 +167,8 @@ qed //@DONE even_2 inversion/adaptation
 //       with IH : exists k', n' = double k' *)
 //    destruct IH as [k' Hk'].
 //    rewrite Hk'. exists (succ k'). simpl.
-//    succearch plus.
-//    rewrite <- plus_n_succm.
+//    Search plus.
+//    rewrite <- plus_n_Sm.
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
@@ -314,7 +314,7 @@ qed
 //Fixpoint evenb (n:nat) : bool := match n with
 //| O => true
 //| succ a => negb (evenb a)
-symbol evenb : ℕ ⇒ B
+symbol evenb : ℕ ⇒ 𝔹
 rule evenb     0     → true
  and evenb (succ &a) → neg (evenb &a)
 

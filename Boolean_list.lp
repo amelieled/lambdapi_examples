@@ -7,7 +7,7 @@ require open amelie.Bool
 constant symbol list_bool : Set
 definition Lb ≔ τ list_bool
 constant symbol nilb  : Lb
-constant symbol consb : B ⇒ Lb ⇒ Lb
+constant symbol consb : 𝔹 ⇒ Lb ⇒ Lb
 
 // symbol listb_ind p
 //: π (p nilb) ⇒ (∀x l, π (p l) ⇒ π (p (consb x l))) ⇒ ∀l, π (p l)

@@ -36,7 +36,7 @@ constant symbol white : C
 constant symbol primary : RGB ⇒ C
 
 // Induction principle on C.
-symbol coldisj_ind :
+symbol color_ind :
      ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary n))) ⇒ ∀c, π (p c)
 
 
@@ -50,7 +50,7 @@ symbol coldisj_ind :
 //  | white ⇒ true
 //  | primary q ⇒ false
 //  end.
-symbol monochrome : C ⇒ B
+symbol monochrome : C ⇒ 𝔹
 rule monochrome black     → true
  and monochrome white     → true
  and monochrome (primary _) → false
@@ -62,7 +62,7 @@ rule monochrome black     → true
 //  | primary red ⇒ true
 //  | primary _ ⇒ false
 //  end.
-symbol isred : C ⇒ B
+symbol isred : C ⇒ 𝔹
 rule isred black           → false
  and isred white           → false
  and isred (primary red)   → true
@@ -76,7 +76,7 @@ rule isred black           → false
 //   | primary green => true
 //   | primary _ => false
 //   end.
-symbol isgreen : C ⇒ B
+symbol isgreen : C ⇒ 𝔹
 rule isgreen black           → false
  and isgreen white           → false
  and isgreen (primary green) → true
@@ -90,7 +90,7 @@ rule isgreen black           → false
 //   | primary blue => true
 //   | primary _ => false
 //   end.
-symbol isblue : C ⇒ B
+symbol isblue : C ⇒ 𝔹
 rule isblue black           → false
  and isblue white           → false
  and isblue (primary blue)  → true
@@ -101,7 +101,7 @@ rule isblue black           → false
 // A proof of : forall c, isred c = true \/ isgreen c = true \/ isblue c = true <-> monochrome c = false
 ////////////////////////////////////
 
-// Theorem my_coldisj_test :
+// Theorem my_color_test :
 // forall c, isred c = true \/ isgreen c =true \/ isblue c = true
 // <-> monochrome c = false.
 // Proof.
@@ -139,16 +139,17 @@ proof
                                   isred (primary z) = true ∨ isgreen (primary z) = true ∨ isblue (primary z) = true) _ _ _
   // Goal red
   simpl
-  assume Hyp apply disj_intro_left (true = true) ((false = true) ∨ (false = true)) reflexivity
+  assume Hyp apply disj_intro_left //(true = true) ((false = true) ∨ (false = true))
+  reflexivity
   // Goal green
   simpl
-  assume Hyp apply disj_intro_right (false = true) ((true = true) ∨ (false = true))
-  apply disj_intro_left (true = true) (false = true)
+  assume Hyp apply disj_intro_right //(false = true) ((true = true) ∨ (false = true))
+  apply disj_intro_left // (true = true) (false = true)
   reflexivity
   // Goal blue
   simpl
-  assume Hyp apply disj_intro_right (false = true) ((false = true) ∨ (true = true))
-  apply disj_intro_right (false = true) (true = true)
+  assume Hyp apply disj_intro_right //(false = true) ((false = true) ∨ (true = true))
+  apply disj_intro_right //(false = true) (true = true)
   reflexivity
 qed
 
@@ -159,7 +160,7 @@ theorem right_to_left_color :
 ∀c, π ((monochrome c) = false ⊃ (isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true)
 proof
   assume c
-  apply coldisj_ind (λz, (monochrome z) = false ⊃ (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true) _ _ _ c
+  apply color_ind (λz, (monochrome z) = false ⊃ (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true) _ _ _ c
   // Goal black
   simpl assume Htruefalse
   apply false_elim apply discr_f_t symmetry apply Htruefalse
@@ -193,7 +194,7 @@ theorem left_to_right_color :
 ∀c, π ((isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true ⊃ (monochrome c) = false)
 proof
   assume c
-  apply coldisj_ind (λz, (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true ⊃ (monochrome z)=false) _ _ _ c
+  apply color_ind (λz, (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true ⊃ (monochrome z)=false) _ _ _ c
   // Goal black
   simpl assume Hor
   apply disj_elim (false = true) ((false = true) ∨ (false = true))
@@ -225,7 +226,7 @@ qed
 // Version ⇔
 ///////////////////////////////////
 
-theorem my_coldisj_test :
+theorem my_color_test :
 ∀c, π ((isred c = true ∨ isgreen c = true ∨ isblue c = true) ⇔ (monochrome c = false))
 proof
   assume c
@@ -245,7 +246,7 @@ qed
 theorem in_red_bis : ∀c, π (imp (eq {bool} (isred c) true) (eq {bool} (monochrome c) false))
 proof
   assume c
-  refine coldisj_ind (λn, imp (eq {bool} (isred n) true) (eq {bool} (monochrome n) false)) ?CB[c] ?CW[c] ?CP[c] c
+  refine color_ind (λn, imp (eq {bool} (isred n) true) (eq {bool} (monochrome n) false)) ?CB[c] ?CW[c] ?CP[c] c
   // Goal : π (imp (eq (isred black) true) (eq (monochrome black) false))
   simpl
   assume Hred

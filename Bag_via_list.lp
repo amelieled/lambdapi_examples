@@ -7,7 +7,7 @@ require open amelie.Bool
 require open amelie.Notation
 
 // Polymorphic if
-symbol if {a} : B ⇒ a ⇒ a ⇒ a
+symbol if {a} : 𝔹 ⇒ a ⇒ a ⇒ a
 rule if true  &t _  → &t
  and if false _  &f → &f
 
@@ -61,7 +61,7 @@ proof reflexivity qed
 ////////////
 //  Member
 ////////////
-symbol member : ℕ ⇒ bag ⇒ B
+symbol member : ℕ ⇒ bag ⇒ 𝔹
 rule member _ □ → false
  and member &v (&y⸬&q) → if (eqb_nat &v &y) true (member &v &q)
 
@@ -112,7 +112,7 @@ proof reflexivity qed
 ////////////
 //  Subset
 ////////////
-symbol subset : bag ⇒ bag ⇒ B
+symbol subset : bag ⇒ bag ⇒ 𝔹
 rule subset    □ _       → true
  and subset (&x⸬&q1) &b2 →
          andb (leb_nat (count &x (&x⸬&q1)) (count &x &b2))
