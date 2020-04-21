@@ -1,8 +1,8 @@
 // Inspiré de Software_Foundations/lf/Basics.html
 require open amelie.Notation
 require open amelie.Bool
-require open amelie.Logic
-require open amelie.Bool_discriminate
+require open amelie.Constructive_logic
+require open amelie.Discriminate
 
 ///////////////////////////////////////
 // Definitions of type

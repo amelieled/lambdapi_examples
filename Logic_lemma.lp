@@ -1,5 +1,5 @@
 require open amelie.Notation
-require open amelie.Logic
+require open amelie.Constructive_logic
 require open amelie.Nat
 
 //Lemma impl_and : forall P Q R : Prop, (P->Q->R) -> (P /\ Q -> R).

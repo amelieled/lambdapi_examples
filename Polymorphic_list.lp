@@ -1,7 +1,7 @@
 require open amelie.Notation
 require open amelie.Bool
 require open amelie.Nat
-require open amelie.Logic
+require open amelie.Constructive_logic
 
 //////////////////////////////////////
 // Type of polymorphic lists

@@ -1,6 +1,6 @@
-require open amelie.Bool_discriminate
+require open amelie.Discriminate
 require open amelie.Bool
-require open amelie.Logic
+require open amelie.Constructive_logic
 require open amelie.Notation
 
 // Check True. (* True : Prop *)
@@ -64,7 +64,39 @@ qed
 //theorem andb_prop : // Il me manque un outil pour y arriver avec cet énoncé
 //∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))
+symbol bool_case :
+∀p b, π((b = true) ⊃ (p b)) ⇒ π((b = false) ⊃ (p b)) ⇒ π(p b)
+
 theorem andb_prop b1 b2
+  : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
+proof
+  assume b1 b2 H1
+  apply conj_intro
+  // 0. π (b1 = true)
+  refine bool_case (λz, z = true) b1 _ _  // destruct b1
+         // 0. π (b1 = true) ⇒ π (b1 = true)
+         assume H2 apply H2
+         // 1. π (b1 = false) ⇒ π (b1 = true)
+         assume H2
+         apply eq_ind true (andb b1 b2) _ (λz, b1 = z)
+              // 0. π (true = andb b1 b2)
+              rewrite H1 reflexivity
+              // 1. π (b1 = andb b1 b2)
+              rewrite H2 reflexivity
+  // 1. π (b2 = true)
+  refine bool_case (λz, z = true) b2 _ _ // destruct b2
+        // 0. π (b2 = true) ⇒ π (b2 = true)
+        assume H2 apply H2
+        // 1. π (b2 = false) ⇒ π (b2 = true)
+        assume H2
+        apply eq_ind true (andb b1 b2) _ (λz, b2 = z)
+              // 0. π (true = andb b1 b2)
+              rewrite H1 reflexivity
+              // 1. π (b2 = andb b1 b2)
+              rewrite H2 reflexivity
+qed
+
+theorem andb_prop2 b1 b2
   : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
 proof
   assume b1 b2

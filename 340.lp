@@ -1,6 +1,6 @@
 require open amelie.Notation
 require open amelie.Bool
-require open amelie.Logic
+require open amelie.Constructive_logic
 
 ///////////////////////////////////////
 // Definitions of type

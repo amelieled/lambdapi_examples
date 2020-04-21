@@ -1,6 +1,6 @@
 require open amelie.Notation
-require open amelie.Logic
-require open amelie.Bool_discriminate
+require open amelie.Constructive_logic
+require open amelie.Discriminate
 require open amelie.Bool
 require open amelie.Nat
 //require open amelie.Op_bool
