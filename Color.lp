@@ -14,14 +14,14 @@ require open amelie.Discriminate
 //  | blue.
 constant symbol rgb : Set
 constant symbol RGB : TYPE
-rule τ rgb → RGB
+rule τ rgb ↪ RGB
 constant symbol red   : RGB
 constant symbol green : RGB
 constant symbol blue  : RGB
 
 // Induction principle on RGB.
 symbol rgb_ind :
-     ∀p, π (p red) ⇒ π (p green) ⇒ π (p blue) ⇒ ∀c, π (p c)
+     Πp, π (p red) → π (p green) → π (p blue) → Πc, π (p c)
 
 
 //Inductive color : Type :=
@@ -30,14 +30,14 @@ symbol rgb_ind :
 //  | primary (p : rgb).
 constant symbol color : Set
 constant symbol C : TYPE
-rule τ color → C
+rule τ color ↪ C
 constant symbol black : C
 constant symbol white : C
-constant symbol primary : RGB ⇒ C
+constant symbol primary : RGB → C
 
 // Induction principle on C.
 symbol color_ind :
-     ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary n))) ⇒ ∀c, π (p c)
+     Πp, π (p black) → π (p white) → (Πn, π (p (primary n))) → Πc, π (p c)
 
 
 //////////////////////////////////////////
@@ -46,28 +46,28 @@ symbol color_ind :
 
 //Definition monochrome (c : color) : bool :=
 //  match c with
-//  | black ⇒ true
-//  | white ⇒ true
-//  | primary q ⇒ false
+//  | black → true
+//  | white → true
+//  | primary q → false
 //  end.
-symbol monochrome : C ⇒ 𝔹
-rule monochrome black     → true
- and monochrome white     → true
- and monochrome (primary _) → false
+symbol monochrome : C → 𝔹
+rule monochrome black     ↪ true
+ with monochrome white     ↪ true
+ with monochrome (primary _) ↪ false
 
 //Definition isred (c : color) : bool :=
 //  match c with
-//  | black ⇒ false
-//  | white ⇒ false
-//  | primary red ⇒ true
-//  | primary _ ⇒ false
+//  | black → false
+//  | white → false
+//  | primary red → true
+//  | primary _ → false
 //  end.
-symbol isred : C ⇒ 𝔹
-rule isred black           → false
- and isred white           → false
- and isred (primary red)   → true
- and isred (primary green) → false
- and isred (primary blue)  → false
+symbol isred : C → 𝔹
+rule isred black           ↪ false
+ with isred white           ↪ false
+ with isred (primary red)   ↪ true
+ with isred (primary green) ↪ false
+ with isred (primary blue)  ↪ false
 
 // Definition isgreen (c : color) : bool :=
 //   match c with
@@ -76,12 +76,12 @@ rule isred black           → false
 //   | primary green => true
 //   | primary _ => false
 //   end.
-symbol isgreen : C ⇒ 𝔹
-rule isgreen black           → false
- and isgreen white           → false
- and isgreen (primary green) → true
- and isgreen (primary red)   → false
- and isgreen (primary blue)  → false
+symbol isgreen : C → 𝔹
+rule isgreen black           ↪ false
+ with isgreen white           ↪ false
+ with isgreen (primary green) ↪ true
+ with isgreen (primary red)   ↪ false
+ with isgreen (primary blue)  ↪ false
 
 // Definition isblue (c : color) : bool :=
 //   match c with
@@ -90,12 +90,12 @@ rule isgreen black           → false
 //   | primary blue => true
 //   | primary _ => false
 //   end.
-symbol isblue : C ⇒ 𝔹
-rule isblue black           → false
- and isblue white           → false
- and isblue (primary blue)  → true
- and isblue (primary red)   → false
- and isblue (primary green) → false
+symbol isblue : C → 𝔹
+rule isblue black           ↪ false
+ with isblue white           ↪ false
+ with isblue (primary blue)  ↪ true
+ with isblue (primary red)   ↪ false
+ with isblue (primary green) ↪ false
 
 ////////////////////////////////////
 // A proof of : forall c, isred c = true \/ isgreen c = true \/ isblue c = true <-> monochrome c = false
@@ -132,7 +132,7 @@ rule isblue black           → false
 ///////////////////////////
 // Right to left (RGB)
 ///////////////////////////
-theorem right_to_left_rgb : ∀n,
+theorem right_to_left_rgb : Πn,
 π (monochrome (primary n) = false ⊃ isred (primary n) = true ∨ isgreen (primary n) = true ∨ isblue (primary n) = true)
 proof
   refine rgb_ind (λz, monochrome (primary z) = false ⊃
@@ -157,7 +157,7 @@ qed
 // Right to left (color)
 ///////////////////////////
 theorem right_to_left_color :
-∀c, π ((monochrome c) = false ⊃ (isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true)
+Πc, π ((monochrome c) = false ⊃ (isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true)
 proof
   assume c
   apply color_ind (λz, (monochrome z) = false ⊃ (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true) _ _ _ c
@@ -175,7 +175,7 @@ qed
 ///////////////////////////
 // Left to right (RGB)
 ///////////////////////////
-theorem left_to_right_rgb : ∀(n:RGB),
+theorem left_to_right_rgb : Π(n:RGB),
 π ((isred (primary n))=true ∨ (isgreen (primary n))=true ∨ (isblue (primary n))=true
         ⊃ (monochrome (primary n))=false)
 proof
@@ -191,7 +191,7 @@ qed
 // Left to right (color)
 ///////////////////////////
 theorem left_to_right_color :
-∀c, π ((isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true ⊃ (monochrome c) = false)
+Πc, π ((isred c)=true ∨ (isgreen c)=true ∨ (isblue c)=true ⊃ (monochrome c) = false)
 proof
   assume c
   apply color_ind (λz, (isred z)=true ∨ (isgreen z)=true ∨ (isblue z)=true ⊃ (monochrome z)=false) _ _ _ c
@@ -200,9 +200,9 @@ proof
   apply disj_elim (false = true) ((false = true) ∨ (false = true))
      // 0. π ((false = true) ∨ ((false = true) ∨ (false = true)))
      apply Hor
-     // 1. π (false = true) ⇒ π (true = false)
+     // 1. π (false = true) → π (true = false)
      assume Hfalsetrue symmetry apply Hfalsetrue
-     // 2. π ((false = true) ∨ (false = true)) ⇒ π (true = false)
+     // 2. π ((false = true) ∨ (false = true)) → π (true = false)
      assume Hor2 apply disj_elim (false = true) (false = true) apply Hor2
            assume Hfalsetrue symmetry apply Hfalsetrue
            assume Hfalsetrue symmetry apply Hfalsetrue
@@ -211,9 +211,9 @@ proof
   apply disj_elim (false = true) ((false = true) ∨ (false = true))
      // 0. π ((false = true) ∨ ((false = true) ∨ (false = true)))
      apply Hor
-     // 1. π (false = true) ⇒ π (true = false)
+     // 1. π (false = true) → π (true = false)
      assume Hfalsetrue symmetry apply Hfalsetrue
-     // 2. π ((false = true) ∨ (false = true)) ⇒ π (true = false)
+     // 2. π ((false = true) ∨ (false = true)) → π (true = false)
      assume Hor2 apply disj_elim (false = true) (false = true) apply Hor2
            assume Hfalsetrue symmetry apply Hfalsetrue
            assume Hfalsetrue symmetry apply Hfalsetrue
@@ -227,7 +227,7 @@ qed
 ///////////////////////////////////
 
 theorem my_color_test :
-∀c, π ((isred c = true ∨ isgreen c = true ∨ isblue c = true) ⇔ (monochrome c = false))
+Πc, π ((isred c = true ∨ isgreen c = true ∨ isblue c = true) ⇔ (monochrome c = false))
 proof
   assume c
   simpl
@@ -243,7 +243,7 @@ qed
 // A weak version of the previous theorem
 /////////////////////////////
 
-theorem in_red_bis : ∀c, π (imp (eq {bool} (isred c) true) (eq {bool} (monochrome c) false))
+theorem in_red_bis : Πc, π (imp (eq {bool} (isred c) true) (eq {bool} (monochrome c) false))
 proof
   assume c
   refine color_ind (λn, imp (eq {bool} (isred n) true) (eq {bool} (monochrome n) false)) ?CB[c] ?CW[c] ?CP[c] c
@@ -257,7 +257,7 @@ proof
   assume Hred
   rewrite Hred
   reflexivity
-  // Goal : ∀(n:RGB), π (imp (eq (isred (primary n)) true) (eq (monochrome (primary n)) false))
+  // Goal : Π(n:RGB), π (imp (eq (isred (primary n)) true) (eq (monochrome (primary n)) false))
   refine rgb_ind (λz, imp (eq {bool} (isred (primary z)) true) (eq {bool} (monochrome (primary z)) false)) ?CR[c] ?CG[c] ?CB[c]
   simpl
   assume Hred

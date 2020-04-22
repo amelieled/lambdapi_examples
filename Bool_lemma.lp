@@ -9,11 +9,11 @@ type true // (* true : B *)
 // Check True -> False. (* True -> False : Prop *)
 type (⊤ ⊃ ⊥) // imp ⊤ ⊥ : Prop
 
-type _ ⇒ _ // ?201 ⇒ ?199 : TYPE
+type _ → _ // ?201 → ?199 : TYPE
 
 // Lemma bool_trivial : forall (P : bool -> Prop) b, P b -> P b.
 // Admitted.
-theorem bool_trivial : ∀p:𝔹⇒Prop,∀b, π (p b) ⇒ π (p b)
+theorem bool_trivial : Πp:𝔹→Prop,Πb, π (p b) → π (p b)
 //π (imp (P b) (P b))
 proof
   assume P b H
@@ -24,7 +24,7 @@ qed
 //  forall b, P b.
 //Admitted.
 theorem bool_ext :
-∀p, π (p true ∧ p false) ⇒ ∀b, π(p b)
+Πp, π (p true ∧ p false) → Πb, π(p b)
 proof
   assume P Hp b
   refine bool_ind (λz, P z) _ _ _
@@ -38,7 +38,7 @@ qed
 //  forall b, P b.
 //Admitted.
 theorem bool_ext2 :
-∀p, π (p true) ⇒ π (p false) ⇒ ∀b, π (p b)
+Πp, π (p true) → π (p false) → Πb, π (p b)
 proof
   assume P HPT HPF b
   refine bool_ind (λz, P z) _ _ _
@@ -62,10 +62,10 @@ qed
 //      * simpl in H. discriminate H. (* false <> true *)
 //Qed.
 //theorem andb_prop : // Il me manque un outil pour y arriver avec cet énoncé
-//∀b1 b2, π (eq {bool} (andb b1 b2) true) ⇒
+//Πb1 b2, π (eq {bool} (andb b1 b2) true) →
 //                    π ((eq {bool} b1 true) ∧ (eq {bool} b2 true))
 symbol bool_case :
-∀p b, π((b = true) ⊃ (p b)) ⇒ π((b = false) ⊃ (p b)) ⇒ π(p b)
+Πp b, π((b = true) ⊃ (p b)) → π((b = false) ⊃ (p b)) → π(p b)
 
 theorem andb_prop b1 b2
   : π (imp (andb b1 b2 = true) ((b1 = true) ∧ (b2 = true)))
@@ -74,9 +74,9 @@ proof
   apply conj_intro
   // 0. π (b1 = true)
   refine bool_case (λz, z = true) b1 _ _  // destruct b1
-         // 0. π (b1 = true) ⇒ π (b1 = true)
+         // 0. π (b1 = true) → π (b1 = true)
          assume H2 apply H2
-         // 1. π (b1 = false) ⇒ π (b1 = true)
+         // 1. π (b1 = false) → π (b1 = true)
          assume H2
          apply eq_ind true (andb b1 b2) _ (λz, b1 = z)
               // 0. π (true = andb b1 b2)
@@ -85,9 +85,9 @@ proof
               rewrite H2 reflexivity
   // 1. π (b2 = true)
   refine bool_case (λz, z = true) b2 _ _ // destruct b2
-        // 0. π (b2 = true) ⇒ π (b2 = true)
+        // 0. π (b2 = true) → π (b2 = true)
         assume H2 apply H2
-        // 1. π (b2 = false) ⇒ π (b2 = true)
+        // 1. π (b2 = false) → π (b2 = true)
         assume H2
         apply eq_ind true (andb b1 b2) _ (λz, b2 = z)
               // 0. π (true = andb b1 b2)

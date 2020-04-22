@@ -7,56 +7,56 @@ require open amelie.Constructive_logic
 ///////////////////////////////////////
 constant symbol rgb : Set
 constant symbol RGB : TYPE
-rule τ rgb → RGB
+rule τ rgb ↪ RGB
 constant symbol red   : RGB
 constant symbol green : RGB
 constant symbol blue  : RGB
 
 // Induction principle on RGB.
 symbol rgb_ind :
-   ∀p, π (p red) ⇒ π (p green) ⇒ π (p blue) ⇒ ∀c, π (p c)
+   Πp, π (p red) → π (p green) → π (p blue) → Πc, π (p c)
 
 constant symbol color : Set
 constant symbol C : TYPE
-rule τ color → C
+rule τ color ↪ C
 constant symbol black : C
 constant symbol white : C
-constant symbol primary : RGB ⇒ C
+constant symbol primary : RGB → C
 
 // Induction principle on C.
-symbol color_ind : ∀p, π (p black) ⇒ π (p white) ⇒ (∀n, π (p (primary n))) ⇒ ∀c, π (p c)
+symbol color_ind : Πp, π (p black) → π (p white) → (Πn, π (p (primary n))) → Πc, π (p c)
 
 //////////////////////////////////////////
 // Some functions
 //////////////////////////////////////////
 
-symbol black_or_white : C ⇒ 𝔹
-rule black_or_white black     → true
- and black_or_white white     → true
- and black_or_white (primary _) → false
+symbol black_or_white : C → 𝔹
+rule black_or_white black     ↪ true
+ with black_or_white white     ↪ true
+ with black_or_white (primary _) ↪ false
 
-symbol isred : C ⇒ 𝔹
-rule isred black       → false
- and isred white       → false
- and isred (primary red) → true
- and isred (primary green) → false
- and isred (primary blue) → false
+symbol isred : C → 𝔹
+rule isred black       ↪ false
+ with isred white       ↪ false
+ with isred (primary red) ↪ true
+ with isred (primary green) ↪ false
+ with isred (primary blue) ↪ false
 
-symbol isgreen : C ⇒ 𝔹
-rule isgreen black       → false
- and isgreen white       → false
- and isgreen (primary red) → false
- and isgreen (primary green) → true
- and isgreen (primary blue) → false
+symbol isgreen : C → 𝔹
+rule isgreen black       ↪ false
+ with isgreen white       ↪ false
+ with isgreen (primary red) ↪ false
+ with isgreen (primary green) ↪ true
+ with isgreen (primary blue) ↪ false
                            
-symbol isblue : C ⇒ 𝔹
-rule isblue black       → false
- and isblue white       → false
- and isblue (primary red) → false
- and isblue (primary green) → false
- and isblue (primary blue) → true
+symbol isblue : C → 𝔹
+rule isblue black       ↪ false
+ with isblue white       ↪ false
+ with isblue (primary red) ↪ false
+ with isblue (primary green) ↪ false
+ with isblue (primary blue) ↪ true
 
-theorem left_rgb : ∀n,
+theorem left_rgb : Πn,
 π (black_or_white (primary n) = false ⊃ isred (primary n) = true ∨ isgreen (primary n) = true ∨ isblue (primary n) = true)
 proof
   assume n

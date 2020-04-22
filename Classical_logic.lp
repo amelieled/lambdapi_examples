@@ -4,7 +4,7 @@ require open amelie.Constructive_logic
 // Excluded middle
 constant symbol excl_mid p : π (p ∨ (¬ p))
 
-theorem neg_elimp p : π (¬ (¬ p)) ⇒ π p
+theorem neg_elimp p : π (¬ (¬ p)) → π p
 proof
     assume p nnp
     refine disj_elim p (¬p) p _ _ _
@@ -22,27 +22,27 @@ qed
 
 //Definition peirce := forall P Q: Prop,                     (* 1 *)
 //  ((P->Q)->P)->P.
-constant symbol peirce p q : π ((p ⊃ q) ⊃ p) ⇒ π p // 1
+constant symbol peirce p q : π ((p ⊃ q) ⊃ p) → π p // 1
 //symbol peirce (_ _:Prop) : Prop
-//rule peirce &p &q → ((&p ⊃ &q) ⊃ &p) ⊃ &p
+//rule peirce $p $q ↪ (($p ⊃ $q) ⊃ $p) ⊃ $p
 
 //Definition double_negation_elimination := forall P:Prop,   (* 2 *)
 //  ~~P -> P.
-//constant symbol double_negation_elimination p : π (¬ (¬ p)) ⇒ π p // 2
+//constant symbol double_negation_elimination p : π (¬ (¬ p)) → π p // 2
 symbol double_negation_elimination (_ :Prop) : Prop
-rule double_negation_elimination &p → (¬ (¬ &p)) ⊃ &p
+rule double_negation_elimination $p ↪ (¬ (¬ $p)) ⊃ $p
 
 //Definition de_morgan_not_and_not := forall P Q:Prop,       (* 3 *)
 //  ~(~P /\ ~Q) -> P\/Q.
-//constant symbol de_morgan_not_and_not p q : π (¬ (¬ p ∧ ¬q)) ⇒ π (p ∨ q) //3
+//constant symbol de_morgan_not_and_not p q : π (¬ (¬ p ∧ ¬q)) → π (p ∨ q) //3
 symbol de_morgan_not_and_not (_ _:Prop) : Prop
-rule de_morgan_not_and_not &p &q → (¬ (¬ &p ∧ ¬&q)) ⊃ (&p ∨ &q)
+rule de_morgan_not_and_not $p $q ↪ (¬ (¬ $p ∧ ¬$q)) ⊃ ($p ∨ $q)
 
 //Definition implies_to_or := forall P Q:Prop,               (* 4 *)
 //  (P->Q) -> (~P\/Q).
-//constant symbol implies_to_or p q : π (p ⊃ q) ⇒ π (¬p ∨ q)
+//constant symbol implies_to_or p q : π (p ⊃ q) → π (¬p ∨ q)
 symbol implies_to_or (_ _:Prop) : Prop
-rule implies_to_or &p &q → (&p ⊃ &q) ⊃ (¬&p ∨ &q)
+rule implies_to_or $p $q ↪ ($p ⊃ $q) ⊃ (¬$p ∨ $q)
 
 // Theorem _0_impl_1 : excluded_middle -> peirce.
 // Proof.
@@ -54,10 +54,10 @@ rule implies_to_or &p &q → (&p ⊃ &q) ⊃ (¬&p ∨ &q)
 //   + assumption.
 //   + apply Hyp2. intro HP. apply HnotP in HP. contradiction.
 // Qed.
-//theorem O_impl_1 : ∀p q, excl_mid p q ⇒ peirce p
+//theorem O_impl_1 : Πp q, excl_mid p q → peirce p
 //proof
 //qed
-//theorem _0_impl_1 : ∀(p q r : Prop), π (excl_mid p ⊃ peirce q r)
+//theorem _0_impl_1 : Π(p q r : Prop), π (excl_mid p ⊃ peirce q r)
 //proof
 //  assume p q r Hexcl_mid Himpl
 //qed

@@ -36,7 +36,7 @@ qed
 //rewrite Hk.  rewrite Ht. reflexivity.
 //Qed.
 theorem is_even_plus :
-  ∀n p, π (is_even n) ⇒ π (is_even p) ⇒ π (is_even (n+p))
+  Πn p, π (is_even n) → π (is_even p) → π (is_even (n+p))
 proof
   assume n p Hn Hp
   apply ex_elim (λp, n = ((succ (succ 0))×p))   apply Hn assume x Hx
@@ -51,18 +51,18 @@ qed
 //Inductive even : nat -> Prop :=
 //| even_0 : even 0
 //| even_SS : forall n, even n -> even (succ (succ n)).
-symbol even : ℕ ⇒ Prop
+symbol even : ℕ → Prop
 constant symbol even_0 : π (even 0)
 constant symbol even_SS n : π (imp (even n) (even (succ (succ n))))
 constant symbol even_0_coq : π (even 0)
-constant symbol even_SS_coq n : π (even n) ⇒ π (even (succ (succ n)))
+constant symbol even_SS_coq n : π (even n) → π (even (succ (succ n)))
 
-symbol even_ind : ∀p, π (p 0) ⇒ (∀n, π (even n) ⇒ π (p n) ⇒ π (p (succ (succ n)))) ⇒ ∀n, π (even n) ⇒ π (p n)
+symbol even_ind : Πp, π (p 0) → (Πn, π (even n) → π (p n) → π (p (succ (succ n)))) → Πn, π (even n) → π (p n)
 
-// symbol even_inject : ∀n, (π (n = 0) ⇒ π (even 0))
-//   ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))) ⇒ π (even n))
-// symbol even_inj : ∀n,  π (even n) ⇒ (π (n = 0) ⇒ π (even 0))
-//   ⇒ (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))))
+// symbol even_inject : Πn, (π (n = 0) → π (even 0))
+//   → (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))) → π (even n))
+// symbol even_inj : Πn,  π (even n) → (π (n = 0) → π (even 0))
+//   → (π (∃(λp,n = succ (succ p) ⊃ even p ⊃ even (succ (succ p)))))
 
 //Lemma even_4 : even 4.
 //Proof.
@@ -94,7 +94,7 @@ qed
 //  apply even_SS. apply even_SS. assumption.
 //Qed.
 //theorem even_plus4 : π (all (λn:N) (imp (even n) (even (plus 4 n))))
-theorem even_plus4 : ∀n, π (imp (even n) (even (4+n)))
+theorem even_plus4 : Πn, π (imp (even n) (even (4+n)))
 proof
   assume n Heven
   apply even_SS_coq (succ (succ n))
@@ -110,31 +110,31 @@ qed
 //  - (* H = even_0 *) simpl. apply even_0.
 //  - (* H = even_SS p Hp *) simpl. exact Hp (* ou assumption*).
 //Qed.
-symbol pred : ℕ ⇒ ℕ
-rule pred     0     → 0
- and pred (succ &n) → &n
+symbol pred : ℕ → ℕ
+rule pred     0     ↪ 0
+ with pred (succ $n) ↪ $n
 
-theorem succ_pred : ∀n, π (¬ (n = 0)) ⇒ π (succ (pred n) = n) // inutile
+theorem succ_pred : Πn, π (¬ (n = 0)) → π (succ (pred n) = n) // inutile
 proof
   refine nat_ind _ _ _
-  // 0. (π (zero = zero) ⇒ π ⊥) ⇒ π (succ (pred zero) = zero)
+  // 0. (π (zero = zero) → π ⊥) → π (succ (pred zero) = zero)
   simpl assume Hfalse apply false_elim apply Hfalse reflexivity
-  // 1. ∀(x:τ nat), ((π (x = zero) ⇒ π ⊥) ⇒ π (succ (pred x) = x)) ⇒ (π (succ x = zero) ⇒ π ⊥)
-  //                         ⇒ π (succ (pred (succ x)) = succ x)
+  // 1. Π(x:τ nat), ((π (x = zero) → π ⊥) → π (succ (pred x) = x)) → (π (succ x = zero) → π ⊥)
+  //                         → π (succ (pred (succ x)) = succ x)
   assume x Hnotzero Hsuccpredx
   reflexivity
 qed
 
-symbol even_inv : ∀n, π (even (succ (succ n))) ⇒ π (even n)
-symbol notEven1 : π (even 1) ⇒ π (⊥)
+symbol even_inv : Πn, π (even (succ (succ n))) → π (even n)
+symbol notEven1 : π (even 1) → π (⊥)
 
-theorem ev_minus2 : ∀n, π (imp (even n) (even (pred (pred n))))
+theorem ev_minus2 : Πn, π (imp (even n) (even (pred (pred n))))
 proof
   //assume n Heven
   refine even_ind _ _ _
   //0. π (even (pred (pred zero)))
   simpl apply even_0
-  //1. ∀(n:τ nat), π (even n) ⇒ π (even (pred (pred n))) ⇒ π (even (pred (pred (succ (succ n)))))
+  //1. Π(n:τ nat), π (even n) → π (even (pred (pred n))) → π (even (pred (pred (succ (succ n)))))
   assume n Heven Hpredpred
   simpl apply Heven
 qed// @DONE even_1 inversion
@@ -147,7 +147,7 @@ qed// @DONE even_1 inversion
 //  inversion H1.
 //  inversion H3.
 //Qed.
-theorem even5_nonsense : π (even 5) ⇒ π ((2+2) = 9)
+theorem even5_nonsense : π (even 5) → π ((2+2) = 9)
 proof
   assume H5
   apply false_elim
@@ -172,12 +172,12 @@ qed //@DONE even_2 inversion/adaptation
 //    replace (k' + 0) with k'. reflexivity.
 //    apply plus_n_O.
 //Qed.
-theorem ev_even : ∀n, π (even n) ⇒ π (∃(λk, n = (2×k)))
+theorem ev_even : Πn, π (even n) → π (∃(λk, n = (2×k)))
 proof
   refine even_ind _ _ _
   // 0. π (∃ (λk, zero = (succ (succ zero) × k)))
   apply ex_intro _ 0 reflexivity
-  // 1. ∀(n:τ nat), π (even n) ⇒ π (∃ (λk, n = (succ (succ zero) × k))) ⇒ π (∃ (λk, succ (succ n) = (succ (succ zero) × k)))
+  // 1. Π(n:τ nat), π (even n) → π (∃ (λk, n = (succ (succ zero) × k))) → π (∃ (λk, succ (succ n) = (succ (succ zero) × k)))
   assume n Hevenn Hex
   apply ex_elim (λk, n = (succ (succ zero) × k)) apply Hex
   assume x Hx apply ex_intro _ (x+1) rewrite Hx simpl
@@ -197,22 +197,22 @@ qed
 //    + right. constructor. assumption.
 //    + left. assumption.
 //Defined.
-theorem even_n_disj_succn : ∀n, π (even n ∨ even (succ n))
+theorem even_n_disj_succn : Πn, π (even n ∨ even (succ n))
 proof
   assume n
   apply nat_ind (λz, even z ∨ even (succ z)) _ _ n
   // 0. π (even O ∨ even (succ O))
   apply disj_intro_left apply even_0_coq
-  //1. ∀(x:τ nat), π (even x ∨ even (succ x)) ⇒ π (even (succ x) ∨ even (succ (succ x)))
+  //1. Π(x:τ nat), π (even x ∨ even (succ x)) → π (even (succ x) ∨ even (succ (succ x)))
   assume x HypOr
   apply disj_elim (even x) (even (succ x))
         // 0. π (even x ∨ even (succ x))
         apply HypOr
-        // 1. π (even x) ⇒ π (even (succ x) ∨ even (succ (succ x)))
+        // 1. π (even x) → π (even (succ x) ∨ even (succ (succ x)))
         assume Hevenx
         apply disj_intro_right
         apply even_SS_coq x apply Hevenx
-        // 2. π (even (succ x)) ⇒ π (even (succ x) ∨ even (succ (succ x)))
+        // 2. π (even (succ x)) → π (even (succ x) ∨ even (succ (succ x)))
         assume Hevensuccx
         apply disj_intro_left apply Hevensuccx
 qed
@@ -223,12 +223,12 @@ qed
 //  * inversion Hyp2.
 //  * inversion Hyp2. unfold not in IHn. apply IHn;assumption.
 //Defined.
-theorem even_n_neg_succn : ∀n, π (even n) ⇒ π (¬ (even (succ n)))
+theorem even_n_neg_succn : Πn, π (even n) → π (¬ (even (succ n)))
 proof
   refine nat_ind _ _ _
-  // 0. π (even zero) ⇒ π (even (succ zero)) ⇒ π ⊥
+  // 0. π (even zero) → π (even (succ zero)) → π ⊥
   assume Heven0 refine notEven1
-  // 1. ∀(x:τ nat), (π (even x) ⇒ π (even (succ x)) ⇒ π ⊥) ⇒ π (even (succ x)) ⇒ π (even (succ (succ x))) ⇒ π ⊥
+  // 1. Π(x:τ nat), (π (even x) → π (even (succ x)) → π ⊥) → π (even (succ x)) → π (even (succ (succ x))) → π ⊥
   assume x IHx Hsucc Hsuccsucc
   apply IHx
         // 0. π (even x)
@@ -246,14 +246,14 @@ qed //@DONE even_3 inversion
 //  * right. intro H. apply even_n_not_succn in H.
 //    contradiction.
 //Defined.
-theorem even_dec : ∀n, π (even n ∨ ¬(even n))
+theorem even_dec : Πn, π (even n ∨ ¬(even n))
 proof
   assume n
   apply disj_elim (even n) (even (succ n))
   apply even_n_disj_succn n
-     // 0. π (even n) ⇒ π (even n ∨ ¬ (even (succ n)))
+     // 0. π (even n) → π (even n ∨ ¬ (even (succ n)))
      assume Hn apply disj_intro_left apply Hn
-     //1. π (even (succ n)) ⇒ π (even n ∨ ¬ (even (succ n)))
+     //1. π (even (succ n)) → π (even n ∨ ¬ (even (succ n)))
      assume Hsuccn apply disj_intro_right
      assume Hn
      refine even_n_neg_succn n Hn Hsuccn
@@ -275,15 +275,15 @@ qed
 //      + assert(P n /\ P (succ n)) by (apply Hn).
 //        decompose [and] H. assumption.
 //Defined.
-theorem assert_for_two_steps_induction : ∀p, π (p 0) ⇒ π (p 1) ⇒
-(∀n, π (p n) ⇒ π (p (succ (succ n)))) ⇒
-(∀n, π (p n ∧ p (succ n)))
+theorem assert_for_two_steps_induction : Πp, π (p 0) → π (p 1) →
+(Πn, π (p n) → π (p (succ (succ n)))) →
+(Πn, π (p n ∧ p (succ n)))
 proof
   assume p Hp0 Hp1 Hn
   refine nat_ind _ _ _
   // 0. π (p zero ∧ p (succ zero))
   apply conj_intro refine Hp0 apply Hp1
-  // 1. ∀(x:τ nat), π (p x ∧ p (succ x)) ⇒ π (p (succ x) ∧ p (succ (succ x)))
+  // 1. Π(x:τ nat), π (p x ∧ p (succ x)) → π (p (succ x) ∧ p (succ (succ x)))
   assume x Hx
   apply conj_intro
          // 0. π (p (succ x))
@@ -293,15 +293,15 @@ proof
          apply conj_elim_left _ (p (succ x)) apply Hx
 qed
 
-theorem two_steps_induction : ∀(p : ℕ ⇒ Prop),
-π(p 0) ⇒ π(p 1) ⇒ π (forall (λn, p n ⊃ p (succ (succ n)))) ⇒
+theorem two_steps_induction : Π(p : ℕ → Prop),
+π(p 0) → π(p 1) → π (forall (λn, p n ⊃ p (succ (succ n)))) →
 π (forall (λn, p n))
 proof
   assume p Hp0 Hp1 IHn
   refine nat_ind _ _ _
   // 0. π (p zero)
   apply Hp0
-  //1. ∀(x:τ nat), π (p x) ⇒ π (p (succ x))
+  //1. Π(x:τ nat), π (p x) → π (p (succ x))
   //assert(P n /\ P (succ n)) by (apply Hn).
 //        decompose [and] H. assumption
   assume x Hx
@@ -314,9 +314,9 @@ qed
 //Fixpoint evenb (n:nat) : bool := match n with
 //| O => true
 //| succ a => negb (evenb a)
-symbol evenb : ℕ ⇒ 𝔹
-rule evenb     0     → true
- and evenb (succ &a) → neg (evenb &a)
+symbol evenb : ℕ → 𝔹
+rule evenb     0     ↪ true
+ with evenb (succ $a) ↪ neg (evenb $a)
 
 //    Prouver les lemmes suivants. succi vous avez besoin de résultats sur les
 //    booléens, vous pouvez les trouver dans [Bool]
@@ -331,7 +331,7 @@ rule evenb     0     → true
 //   inversion H.
 //   apply Bool.negb_involutive_reverse.
 //Defined.
-theorem neg_involutive_reverse : ∀b, π (b = neg (neg b))
+theorem neg_involutive_reverse : Πb, π (b = neg (neg b))
 proof
   refine bool_ind _ _ _
   // 0. π (true = neg (neg true))
@@ -340,15 +340,15 @@ proof
   reflexivity
 qed
 
-theorem evenb_correct : ∀n, π (evenb n = true) ⇒ π (even n)
+theorem evenb_correct : Πn, π (evenb n = true) → π (even n)
 proof
   refine two_steps_induction _ _ _ _
-  // 0. π (evenb zero = true) ⇒ π (even zero)
+  // 0. π (evenb zero = true) → π (even zero)
   assume H0 apply even_0
-  // 1. π (evenb (succ zero) = true) ⇒ π (even (succ zero))
+  // 1. π (evenb (succ zero) = true) → π (even (succ zero))
   simpl assume Hfalsetrue
   apply false_elim apply discr_f_t apply Hfalsetrue
-  // 2. ∀(x:τ nat), (π (evenb x = true) ⇒ π (even x)) ⇒ π (evenb (succ (succ x)) = true) ⇒ π (even (succ (succ x)))
+  // 2. Π(x:τ nat), (π (evenb x = true) → π (even x)) → π (evenb (succ (succ x)) = true) → π (even (succ (succ x)))
   simpl assume x IHn Hsuccsucc
   apply even_SS_coq x apply IHn
   rewrite neg_involutive_reverse (evenb x) apply Hsuccsucc
@@ -364,19 +364,19 @@ qed//@DONE even_4 inversion
 //   rewrite Bool.negb_involutive_reverse.
 //   rewrite H1. reflexivity.
 //Defined.
-theorem neg_involutive_reverse_trash : ∀b, π (neg (neg b) = b)
+theorem neg_involutive_reverse_trash : Πb, π (neg (neg b) = b)
 proof
   refine bool_ind _ _ _ reflexivity reflexivity
 qed
 
-theorem evenb_complete : ∀n, π (even n) ⇒  π (evenb n = true)
+theorem evenb_complete : Πn, π (even n) →  π (evenb n = true)
 proof
   refine two_steps_induction _ _ _ _
-  // 0. π (even zero) ⇒ π (evenb zero = true)
+  // 0. π (even zero) → π (evenb zero = true)
   assume H0 reflexivity
-  // 1. π (even (succ zero)) ⇒ π (evenb (succ zero) = true)
+  // 1. π (even (succ zero)) → π (evenb (succ zero) = true)
   assume Hsucc0 apply false_elim apply notEven1 apply Hsucc0
-  // 2. ∀(x:τ nat), (π (even x) ⇒ π (evenb x = true)) ⇒ π (even (succ (succ x))) ⇒ π (evenb (succ (succ x)) = true)
+  // 2. Π(x:τ nat), (π (even x) → π (evenb x = true)) → π (even (succ (succ x))) → π (evenb (succ (succ x)) = true)
   simpl assume x IHn Hsuccsucc
   //apply even_SS_coq x apply IHn
   rewrite neg_involutive_reverse_trash
@@ -389,7 +389,7 @@ qed //@DONE even_5 inversion
 // + apply evenb_correct.
 // + apply evenb_complete.
 //Defined.
-theorem evenb_spec : ∀n, π (evenb n = true ⇔ even n)
+theorem evenb_spec : Πn, π (evenb n = true ⇔ even n)
 proof
  assume n
   apply conj_intro
@@ -409,15 +409,15 @@ qed
 //   rewrite H in H0. inversion H0.
 //Defined.
 symbol bool_case :
-∀p b, π((b = true) ⊃ (p b)) ⇒ π((false = b) ⊃ (p false)) ⇒ π(p b)
+Πp b, π((b = true) ⊃ (p b)) → π((false = b) ⊃ (p false)) → π(p b)
 
-theorem even_dec_bis : ∀n, π (even n ∨ ¬(even n))
+theorem even_dec_bis : Πn, π (even n ∨ ¬(even n))
 proof
   assume n
   refine bool_case (λb, (even n ∨ ¬(even n))) (evenb n) _ _
-  // 0. π (evenb n = true) ⇒ π (even n ∨ ¬ (even n))
+  // 0. π (evenb n = true) → π (even n ∨ ¬ (even n))
   assume Hevenbtrue apply disj_intro_left refine evenb_correct n Hevenbtrue
-  // 1. π (evenb n = false) ⇒ π (even n ∨ ¬ (even n))
+  // 1. π (evenb n = false) → π (even n ∨ ¬ (even n))
   assume Hevenbfalse apply disj_intro_right assume Hevenn
   apply discr_f_t
   rewrite Hevenbfalse

@@ -9,12 +9,12 @@ require open amelie.Constructive_logic
 // Inductive list {A:Type} : Type :=
 // | nil : list A
 // | cons : A -> list A -> list A .
-constant symbol list : Set ⇒ Set
+constant symbol list : Set → Set
 set declared "𝕃"
 definition 𝕃a ≔ τ (list a)
 set declared "□"
 constant symbol □ {a} : 𝕃a
-constant symbol cons {a} : τa ⇒ 𝕃a ⇒ 𝕃a
+constant symbol cons {a} : τa → 𝕃a → 𝕃a
 set infix right 4 "⸬" ≔ cons
 
 assert λA (l:𝕃A) x y, (cons x (cons y l)) ≡ λA (l:𝕃A) x y, (x⸬(y⸬l))
@@ -37,8 +37,8 @@ compute (true⸬false ⸬□)
 definition id A x:A ≔ x
 
 // Induction principle on lists
-symbol list_ind {a} (p:𝕃a⇒Prop) :
-  π(p □) ⇒ (∀x l,π(p l) ⇒ π(p(x⸬l))) ⇒ ∀l,π(p l)
+symbol list_ind {a} (p:𝕃a→Prop) :
+  π(p □) → (Πx l,π(p l) → π(p(x⸬l))) → Πl,π(p l)
 
 /////////////////////////////
 // Length of a list
@@ -48,9 +48,9 @@ symbol list_ind {a} (p:𝕃a⇒Prop) :
 //  | nil _ => 0
 //  | cons _ _ t => S (length A t)
 //  end.
-symbol length {a} : 𝕃a ⇒ ℕ
-rule length □ → 0
-and length (_ ⸬ &l) → succ (length &l)
+symbol length {a} : 𝕃a → ℕ
+rule length □ ↪ 0
+ with length (_ ⸬ $l) ↪ succ (length $l)
 
 //Eval compute in (length bool
 //   (cons bool true
@@ -65,10 +65,10 @@ compute length (true⸬false ⸬□)
 //  | nil _ => l2
 //  | cons _ a l => cons A a (app A l l2)
 //    end.
-symbol app {a} : 𝕃a ⇒ 𝕃a ⇒ 𝕃a
+symbol app {a} : 𝕃a → 𝕃a → 𝕃a
 set infix right 5 "⋅" ≔ app
-rule     □ ⋅ &m     → &m
- and (&x ⸬ &l) ⋅ &m → &x ⸬ (&l ⋅ &m)
+rule     □ ⋅ $m     ↪ $m
+ with ($x ⸬ $l) ⋅ $m ↪ $x ⸬ ($l ⋅ $m)
 
 assert a (x y z:𝕃a) ⊢ x⋅y⋅z ≡ x⋅(y⋅z)
 assert a x l m ⊢ x⸬l⋅m ≡ x⸬(l⋅m)
@@ -84,7 +84,7 @@ assert a x l m ⊢ x⸬l⋅m ≡ x⸬(l⋅m)
 //  * simpl. intro l2. rewrite IHl1. reflexivity.
 // Defined.
 theorem length_app :
-  ∀A (l1 l2 : 𝕃A), π (((length l1)+(length l2)) = (length (l1 ⋅ l2)))
+  ΠA (l1 l2 : 𝕃A), π (((length l1)+(length l2)) = (length (l1 ⋅ l2)))
 proof
   assume A l1 l2
   apply list_ind
@@ -94,14 +94,14 @@ proof
   simpl rewrite IHl1 reflexivity
 qed
 
-//rule length (&l ⋅ &m) → length &l + length &m
+//rule length ($l ⋅ $m) ↪ length $l + length $m
 
 // Définir la fonction qui renverse une liste (on utilisera la fonction
 // précédente app)
 // et  montrer que reverse(reverse l) = l pour tout l, par induction sur l
-symbol reverse {A} : 𝕃A ⇒ 𝕃A
-rule reverse    □     → □
- and reverse  (&v⸬&q) → (reverse &q)⋅(cons &v □)
+symbol reverse {A} : 𝕃A → 𝕃A
+rule reverse    □     ↪ □
+ with reverse  ($v⸬$q) ↪ (reverse $q)⋅(cons $v □)
 
 // Lemma app_nil : forall l, app l [] = l.
 // Proof.
@@ -109,21 +109,21 @@ rule reverse    □     → □
 //  + simpl. reflexivity.
 //  + simpl. rewrite IHl. reflexivity.
 // Defined.
-theorem app_nil : ∀A (l:𝕃A), π ((l⋅□) = l)
+theorem app_nil : ΠA (l:𝕃A), π ((l⋅□) = l)
 proof
   assume A l
   refine list_ind (λz, (z⋅□) = z) _ _ _
   // 0. π (app nil nil = nil)
   reflexivity
-  // 1. ∀(x:τ A) (l0:τ (list A)),
-  // π (app l0 nil = l0) ⇒ π (app (x ⸬ l0) nil = (x ⸬ l0))
+  // 1. Π(x:τ A) (l0:τ (list A)),
+  // π (app l0 nil = l0) → π (app (x ⸬ l0) nil = (x ⸬ l0))
   assume x l IHl
   simpl
   rewrite IHl
   reflexivity
 qed
 
-//rule &m ⋅ □ → &m
+//rule $m ⋅ □ ↪ $m
 
 // Lemma app_assoc : forall l1 l2 l3,
 // app (app l1 l2) l3 = app l1 (app l2 l3).
@@ -133,13 +133,13 @@ qed
 //  + simpl. intros l2 l3. rewrite IHl1. reflexivity.
 // Defined.
 theorem app_assoc :
-  ∀A (l1 l2 l3 : 𝕃A), π (((l1⋅l2)⋅l3)=(l1⋅(l2⋅l3)))
+  ΠA (l1 l2 l3 : 𝕃A), π (((l1⋅l2)⋅l3)=(l1⋅(l2⋅l3)))
 proof
   assume A l1 l2 l3
   apply list_ind (λz, ((z⋅l2)⋅l3)=(z⋅(l2⋅l3))) _ _ l1
   // 0. π (app (app nil l2) l3 = app nil (app l2 l3))
   reflexivity
-  // 1. ∀(x:τ A) (l:τ (list A)), π (app (app l l2) l3 = app l (app l2 l3)) ⇒
+  // 1. Π(x:τ A) (l:τ (list A)), π (app (app l l2) l3 = app l (app l2 l3)) →
   // π (app (app (x ⸬ l) l2) l3 = app (x ⸬ l) (app l2 l3))
   assume A
   simpl
@@ -147,13 +147,13 @@ proof
   rewrite IHl reflexivity
 qed
 
-//rule (&l ⋅ &m) ⋅ &n → &l ⋅ (&m ⋅ &n)
+//rule ($l ⋅ $m) ⋅ $n ↪ $l ⋅ ($m ⋅ $n)
 
 // Lemma special_case : forall l a, cons a l = app [a] l.
 // Proof.
 // intro l. simpl. reflexivity.
 // Defined.
-theorem special_case : ∀A (l:𝕃A) a, π (((a⸬□)⋅l)=(a⸬l))
+theorem special_case : ΠA (l:𝕃A) a, π (((a⸬□)⋅l)=(a⸬l))
 proof
   assume A l x simpl reflexivity
 qed
@@ -169,7 +169,7 @@ qed
 //    apply app_assoc.
 // Defined.
 theorem reverse_concat :
-  ∀A (l1 l2:𝕃A), π ((reverse (l1⋅l2)) = ((reverse l2)⋅(reverse l1)))
+  ΠA (l1 l2:𝕃A), π ((reverse (l1⋅l2)) = ((reverse l2)⋅(reverse l1)))
 proof
   assume A l1 l2
   apply list_ind
@@ -191,14 +191,14 @@ qed
 //    repeat rewrite reverse_bis_concat.
 //    simpl. rewrite IHl. reflexivity.
 // Defined.
-theorem fixpoint_reverse : ∀A (l:𝕃A), π (reverse (reverse l) = l)
+theorem fixpoint_reverse : ΠA (l:𝕃A), π (reverse (reverse l) = l)
 proof
   assume A l
   apply list_ind (λz, reverse (reverse z) = z) _ _
   // 0. π (reverse (reverse nil) = nil)
   reflexivity
-  // 1. ∀(x:τ A) (l0:τ (list A)),
-  // π (reverse (reverse l0) = l0) ⇒ π (reverse (reverse (x ⸬ l0)) = (x ⸬ l0))
+  // 1. Π(x:τ A) (l0:τ (list A)),
+  // π (reverse (reverse l0) = l0) → π (reverse (reverse (x ⸬ l0)) = (x ⸬ l0))
   assume x l0 IHl
   simpl rewrite reverse_concat A //(reverse l0) (cons x nil)
   simpl rewrite IHl reflexivity
@@ -213,12 +213,12 @@ qed
 //  mem_head : forall x l, mem x (cons x l)
 //| mem_tail : forall x y l,
 //   mem x l -> mem x (cons y l).
-symbol mem {A} : τ A ⇒ 𝕃A ⇒ Prop
+symbol mem {A} : τ A → 𝕃A → Prop
 constant symbol mem_head {A} (x  :τ A) (l:𝕃A) : π (mem x (x⸬l))
 constant symbol mem_tail {A} (x y:τ A) (l:𝕃A) :
   π ((mem x l) ⊃ (mem x (y⸬l)))
 
-symbol notMemnil {A} : ∀(x:τ A), π (mem x □) ⇒ π (⊥)
+symbol notMemnil {A} : Π(x:τ A), π (mem x □) → π (⊥)
 symbol mem_inv {A} (x y : τ A) (l:𝕃A) : π ((mem x (y⸬l) ⊃ (x = y ∨ mem x l)))
 // Check app.
 type app
@@ -234,21 +234,21 @@ type app
 //     - subst. constructor.
 //     - simpl. constructor. apply IHl1. assumption.
 //Defined.
-theorem app_left : ∀A (l1 l2: 𝕃A) (x:τ A), π (mem x l1) ⇒ π (mem x (l1⋅l2))
+theorem app_left : ΠA (l1 l2: 𝕃A) (x:τ A), π (mem x l1) → π (mem x (l1⋅l2))
 proof
  assume A
   refine list_ind _ _ _
-  // 0. ∀(x:τ (list A)) (x0:τ A), π (mem x0 □) ⇒ π (mem x0 (□ ⋅ x))
+  // 0. Π(x:τ (list A)) (x0:τ A), π (mem x0 □) → π (mem x0 (□ ⋅ x))
   assume x x0 Hmemnil apply false_elim apply notMemnil x0 apply Hmemnil
-  // 1. ∀(x:τ A) (l:τ (list A)), (∀(x:τ (list A)) (x0:τ A), π (mem x0 l) ⇒ π (mem x0 (l ⋅ x)))
-  //            ⇒ ∀(x0:τ (list A)) (x1:τ A), π (mem x1 (x ⸬ l)) ⇒ π (mem x1 ((x ⸬ l) ⋅ x0))
+  // 1. Π(x:τ A) (l:τ (list A)), (Π(x:τ (list A)) (x0:τ A), π (mem x0 l) → π (mem x0 (l ⋅ x)))
+  //            → Π(x0:τ (list A)) (x1:τ A), π (mem x1 (x ⸬ l)) → π (mem x1 ((x ⸬ l) ⋅ x0))
   simpl assume x l1 IHl1 l2 x2 Hl1
   apply disj_elim (x2=x) (mem x2 l1)
         // 0. π ((x2 = x) ∨ mem x2 (l1 ⋅ l2))
         apply mem_inv x2 x l1 Hl1
-        // 1. π (x2 = x) ⇒ π (mem x2 (x ⸬ (l1 ⋅ l2)))
+        // 1. π (x2 = x) → π (mem x2 (x ⸬ (l1 ⋅ l2)))
         assume Heqx2x rewrite Heqx2x apply mem_head x (l1⋅l2)
-        // 2. π (mem x2 l1) ⇒ π (mem x2 (x ⸬ (l1 ⋅ l2)))
+        // 2. π (mem x2 l1) → π (mem x2 (x ⸬ (l1 ⋅ l2)))
         assume Hl1
         simpl //apply disj_intro_right apply Hmeml2
         refine mem_tail x2 x (l1⋅l2) _
@@ -266,33 +266,33 @@ qed //@DONE poly_list_1 inversion
 //          + left. constructor. assumption.
 //          + right. assumption.
 //Defined.
-theorem app_or : ∀A (l1 l2: 𝕃A) (x:τ A),
+theorem app_or : ΠA (l1 l2: 𝕃A) (x:τ A),
 π (mem x (l1⋅l2) ⊃ (mem x l1) ∨ (mem x l2))
 proof
   assume A l1 l2 x
   apply list_ind (λz, mem x (z⋅l2) ⊃ (mem x z) ∨ (mem x l2)) _ _ l1
-  // 0. π (mem x (app nil l2)) ⇒ π (mem x nil ∨ mem x l2)
+  // 0. π (mem x (app nil l2)) → π (mem x nil ∨ mem x l2)
   simpl assume Hmeml2 apply disj_intro_right refine Hmeml2
-//1. ∀(x0:τ A) (l:τ (list A)),
-//     (π (mem x (app l l2)) ⇒ π (mem x l ∨ mem x l2))
-// ⇒ π (mem x (app (x0 ⸬ l) l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+//1. Π(x0:τ A) (l:τ (list A)),
+//     (π (mem x (app l l2)) → π (mem x l ∨ mem x l2))
+// → π (mem x (app (x0 ⸬ l) l2)) → π (mem x (x0 ⸬ l) ∨ mem x l2)
   simpl assume x0 l Hyp1 Hyp2
   apply disj_elim (x=x0) (mem x (l⋅l2))
   // 0. π ((x = x0) ∨ mem x (l ⋅ l2))
   apply mem_inv x x0 (l⋅l2) Hyp2
-  // 1. π (x = x0) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+  // 1. π (x = x0) → π (mem x (x0 ⸬ l) ∨ mem x l2)
   assume Heqxx0
   apply disj_intro_left rewrite Heqxx0 apply mem_head x0 l
-  // 2. π (mem x (l ⋅ l2)) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+  // 2. π (mem x (l ⋅ l2)) → π (mem x (x0 ⸬ l) ∨ mem x l2)
   assume Hmem
   apply disj_elim (mem x l) (mem x l2)
         // 0. π (mem x l ∨ mem x l2)
         apply Hyp1 apply Hmem
-        // 1. π (mem x l) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+        // 1. π (mem x l) → π (mem x (x0 ⸬ l) ∨ mem x l2)
         assume Hmeml
         apply disj_intro_left
         refine mem_tail x x0 l _ refine Hmeml // OU apply mem_tail x x0 l Hmeml
-        // 2. π (mem x l2) ⇒ π (mem x (x0 ⸬ l) ∨ mem x l2)
+        // 2. π (mem x l2) → π (mem x (x0 ⸬ l) ∨ mem x l2)
         assume Hmeml2
         apply disj_intro_right apply Hmeml2
 qed //@DONE poly_list_2 inversion

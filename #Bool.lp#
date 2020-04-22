@@ -1,3 +1,4 @@
+Π
 require open amelie.Notation
 //////////////////////
 // Boolean type
@@ -10,8 +11,8 @@ constant symbol false : 𝔹
 
 // Induction principle on B.
 symbol bool_ind : Πp, π(p true) → π(p false) → Πb, π(p b)
-rule bool_ind _ $t _  true  ↪ $t
- with bool_ind _ _  $f false ↪ $f
+rule bool_ind _ &t _  true  ↪ &t
+ and bool_ind _ _  &f false ↪ &f
 
 ////////////////////////////////
 //  Some operations
@@ -25,7 +26,7 @@ rule bool_ind _ $t _  true  ↪ $t
 //  end.
 symbol neg : 𝔹 → 𝔹
 rule neg true  ↪ false
- with neg false ↪ true
+ and neg false ↪ true
 
 // Disjunction
 // Definition or b1 b2 :=
@@ -36,9 +37,9 @@ rule neg true  ↪ false
 symbol or : 𝔹 → 𝔹 → 𝔹
 set infix left 6 "|" ≔ or
 rule true | _  ↪ true
- with _  | true ↪ true
- with false | $b ↪ $b
- with $b | false ↪ $b
+ and _  | true ↪ true
+ and false | &b ↪ &b
+ and &b | false ↪ &b
 
 // Conjunction
 // Definition andb b1 b2 :=
@@ -48,10 +49,10 @@ rule true | _  ↪ true
 //  end.
 symbol andb : 𝔹 → 𝔹 → 𝔹
 //set infix left 5 "^" ≔ {|and|}
-rule andb true  $b    ↪ $b
- with andb $b    true  ↪ $b
- with andb false _     ↪ false
- with andb _     false ↪ false
+rule andb true  &b    ↪ &b
+ and andb &b    true  ↪ &b
+ and andb false _     ↪ false
+ and andb _     false ↪ false
 
 ////////////////////////////////////////////////
 //  Some examples of functions definitions

@@ -8,7 +8,7 @@ require open amelie.Nat
 //destruct Hyp2 as [Hp Hq].
 //apply Hyp1 ; assumption.
 //Qed.
-theorem impl_and : ∀P Q R : Prop, π ((P ⊃ (Q ⊃ R)) ⊃ ((P ∧ Q) ⊃ R))
+theorem impl_and : ΠP Q R : Prop, π ((P ⊃ (Q ⊃ R)) ⊃ ((P ∧ Q) ⊃ R))
 proof
   assume P Q R Himpl Hand
   apply Himpl
@@ -22,7 +22,7 @@ qed
 //apply Hyp1.
 //split ; assumption.
 //Qed.
-theorem conj_impl : ∀P Q R : Prop, π (((P ∧ Q) ⊃ R) ⊃ (P ⊃ (Q ⊃ R)))
+theorem conj_impl : ΠP Q R : Prop, π (((P ∧ Q) ⊃ R) ⊃ (P ⊃ (Q ⊃ R)))
 proof
   assume P Q R Hand HP HQ
   // Goal π ((P ∧ Q) ⊃ R)
@@ -40,7 +40,7 @@ qed
 //+ apply conj_impl.
 //+ apply impl_and.
 //Qed.
-theorem conj_impl_iff : ∀P Q R : Prop,
+theorem conj_impl_iff : ΠP Q R : Prop,
 π (((P ∧ Q) ⊃ R) ⇔ (P ⊃(Q ⊃ R)))
 proof
   assume P Q R
@@ -57,7 +57,7 @@ qed
 //apply Hyp1.
 //assumption.
 //Qed.
-theorem impl_not : ∀P : Prop, π P ⇒ π (¬ (¬ P))
+theorem impl_not : ΠP : Prop, π P → π (¬ (¬ P))
 proof
   assume P HP
   //apply neg_intro (¬ P)
@@ -73,7 +73,7 @@ qed
 //apply H2.
 //assumption.
 //Qed.
-theorem modus_ponens : ∀P Q : Prop, π P ⇒ (π P ⇒ π Q) ⇒ π Q
+theorem modus_ponens : ΠP Q : Prop, π P → (π P → π Q) → π Q
 proof
   assume P Q HP Himp
   apply Himp
@@ -86,7 +86,7 @@ qed
 //intro P. unfold not.
 //apply modus_ponens.
 //Qed.
-theorem impl_neg_bis : ∀P : Prop, π P ⇒ π (¬ (¬ P))
+theorem impl_neg_bis : ΠP : Prop, π P → π (¬ (¬ P))
 proof
   assume P
   refine modus_ponens P ⊥
@@ -103,7 +103,7 @@ qed
 //destruct H1 as [HH1 HH2].
 //apply HH2. assumption.
 //Qed.
-theorem P_notP_contradiction : ∀P : Prop, π (¬(P ∧ ¬P))
+theorem P_notP_contradiction : ΠP : Prop, π (¬(P ∧ ¬P))
 proof
   assume P Hand
   //apply neg_intro (P ∧ ¬P)
@@ -115,15 +115,15 @@ qed
 //Lemma neg_and : forall P Q : Prop, P \/ Q -> ~(~ P /\ ~Q).
 //Proof.
 //Admitted.
-theorem neg_and : ∀P Q : Prop, π (P ∨ Q) ⇒ π (¬(¬P ∧ ¬Q))
+theorem neg_and : ΠP Q : Prop, π (P ∨ Q) → π (¬(¬P ∧ ¬Q))
 proof
   assume P Q Hor Hand
   refine disj_elim P Q ⊥ _ _ _
   // Case π (P ∨ Q)
   apply Hor
-  // Case π P ⇒ π ⊥
+  // Case π P → π ⊥
   refine conj_elim_left (¬P) (¬Q) _ apply Hand
-  // Case π Q ⇒ π ⊥
+  // Case π Q → π ⊥
   refine conj_elim_right (¬P) (¬Q) _ apply Hand
 qed
 
@@ -136,7 +136,7 @@ qed
 //contradiction.
 //Qed.
 theorem exists_neg_forall :
-∀(P :ℕ ⇒ Prop), π(∃P) ⇒ π (¬(forall (λm:ℕ, ¬ (P m))))
+Π(P :ℕ → Prop), π(∃P) → π (¬(forall (λm:ℕ, ¬ (P m))))
 proof
   assume P Hexists Hforall
   //apply H2

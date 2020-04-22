@@ -16,10 +16,10 @@ constant symbol autoroute      : R
 //  | nationale => autoroute
 //  | autoroute => autoroute
 //  end.
-symbol agrandir : R ⇒ R
-rule agrandir departementale → nationale
- and agrandir nationale      → autoroute
- and agrandir autoroute      → autoroute
+symbol agrandir : R → R
+rule agrandir departementale ↪ nationale
+ with agrandir nationale      ↪ autoroute
+ with agrandir autoroute      ↪ autoroute
 
 // Eval compute in (agrandir (agrandir nationale)).
 compute agrandir (agrandir nationale)
@@ -37,7 +37,7 @@ qed
 constant symbol terrain    : Set
 definition Ter ≔ τ terrain
 constant symbol t_terre    : Ter
-constant symbol t_route    : R ⇒ Ter
+constant symbol t_route    : R → Ter
 constant symbol t_batiment : Ter
 
 //Check (t_route nationale).
