@@ -41,7 +41,7 @@ assert p q ⊢ ¬ p ∧ q ≡ (¬ p) ∧ q
 constant symbol imp : Prop → Prop → Prop
 set infix right 5 "⊃" ≔ imp
 //constant symbol imp_intro p q : (π p → π q) → π (imp p q)
-//symbol imp_elim  p q : π (imp p q) → π p → π q
+symbol imp_elim  p q : π (imp p q) → π p → π q
 rule π ($p ⊃ $q) ↪ π $p → π $q
 
 assert p q r s ⊢ p ∧ q ⊃ r ∨ s ≡ (p ∧ q) ⊃ (r ∨ s)
