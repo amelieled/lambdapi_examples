@@ -52,8 +52,9 @@ definition equiv (p q : Prop) ≔ (p ⊃ q) ∧ (q ⊃ p)
 set infix left 7 "⇔" ≔ equiv
 
 // Universal quantification
-constant symbol forall {a} : (τ a → Prop) → Prop
-rule π (forall $f) ↪ Πx, π ($f x)
+set declared "∀"
+constant symbol ∀ {a} : (τ a → Prop) → Prop
+rule π (∀ $f) ↪ Πx, π ($f x)
 
 // Existential quantification
 set declared "∃"
@@ -62,7 +63,7 @@ constant symbol ex_intro {a} p (x:τ a) : π (p x) → π (∃ p)
 symbol ex_elim {a} p q : π (∃ p) → (Πx:τ a, π (p x) → π q) → π q
 
 // Set builtins for the rewrite tactic
-set builtin "all"   ≔ forall
+set builtin "all"   ≔ ∀
 set builtin "bot"   ≔ ⊥
 set builtin "top"   ≔ ⊤
 set builtin "imp"   ≔ imp

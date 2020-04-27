@@ -409,7 +409,9 @@ qed
 //   rewrite H in H0. inversion H0.
 //Defined.
 symbol bool_case :
-Πp b, π((b = true) ⊃ (p b)) → π((false = b) ⊃ (p false)) → π(p b)
+Πp b, π((b = true) ⊃ (p b)) → π((b = false) ⊃ (p b)) → π(p b)
+
+constant symbol eq_ind2 {a} (x y : τ a) : π (x = y) → Πp, π (p x) → π (p y)
 
 theorem even_dec_bis : Πn, π (even n ∨ ¬(even n))
 proof
@@ -418,8 +420,9 @@ proof
   // 0. π (evenb n = true) → π (even n ∨ ¬ (even n))
   assume Hevenbtrue apply disj_intro_left refine evenb_correct n Hevenbtrue
   // 1. π (evenb n = false) → π (even n ∨ ¬ (even n))
-  assume Hevenbfalse apply disj_intro_right assume Hevenn
-  apply discr_f_t
-  rewrite Hevenbfalse
+  assume Hevenbfalse apply disj_intro_right
+  assume Hevenn apply discr_f_t
+  refine eq_ind2 (evenb n) false Hevenbfalse (λz, z = true) _
+  //rewrite Hevenbfalse
   refine evenb_complete n Hevenn
 qed //@DONE even_6 destruct eqn + inversion
