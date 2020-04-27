@@ -33,8 +33,8 @@ rule neg true  ↪ false
 //   | true => true
 //   | false => b2
 //   end.
-symbol or : 𝔹 → 𝔹 → 𝔹
-set infix left 6 "|" ≔ or
+symbol orb : 𝔹 → 𝔹 → 𝔹
+set infix left 6 "|" ≔ orb
 rule true | _  ↪ true
  with _  | true ↪ true
  with false | $b ↪ $b
@@ -47,12 +47,11 @@ rule true | _  ↪ true
 //  | false => false
 //  end.
 symbol andb : 𝔹 → 𝔹 → 𝔹
-//set infix left 5 "^" ≔ {|and|}
-rule andb true  $b    ↪ $b
- with andb $b    true  ↪ $b
- with andb false _     ↪ false
- with andb _     false ↪ false
-
+set infix left 7 "&" ≔ andb
+rule true  & $b    ↪ $b
+with $b    & true  ↪ $b
+with false & _     ↪ false
+with _     & false ↪ false
 ////////////////////////////////////////////////
 //  Some examples of functions definitions
 ////////////////////////////////////////////////
