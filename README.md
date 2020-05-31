@@ -1,3 +1,10 @@
+Please create the file "lambdapi.pkg" at the same level of this directory.
+Write on the following lines:
+```
+package_name = amelie
+root_path = amelie
+```
+
 Content of files :
 
    - (number).lp: linking with the issue n°(number)
