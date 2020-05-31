@@ -1,7 +1,7 @@
-require open amelie.Notation
-require open amelie.Bool
-require open amelie.Nat
-require open amelie.Constructive_logic
+require open amelie.lambdapi_examples.Notation
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Nat
+require open amelie.lambdapi_examples.Constructive_logic
 
 //////////////////////////////////////
 // Type of polymorphic lists

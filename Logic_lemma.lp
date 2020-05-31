@@ -1,6 +1,6 @@
-require open amelie.Notation
-require open amelie.Constructive_logic
-require open amelie.Nat
+require open amelie.lambdapi_examples.Notation
+require open amelie.lambdapi_examples.Constructive_logic
+require open amelie.lambdapi_examples.Nat
 
 //Lemma impl_and : forall P Q R : Prop, (P->Q->R) -> (P /\ Q -> R).
 //Proof
@@ -136,7 +136,7 @@ qed
 //contradiction.
 //Qed.
 theorem exists_neg_forall :
-Π(P :ℕ → Prop), π(∃P) → π (¬(forall (λm:ℕ, ¬ (P m))))
+Π(P :ℕ → Prop), π(∃P) → π (¬(∀ (λm:ℕ, ¬ (P m))))
 proof
   assume P Hexists Hforall
   //apply H2

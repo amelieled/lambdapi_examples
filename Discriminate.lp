@@ -1,6 +1,6 @@
-require open amelie.Bool
-require open amelie.Constructive_logic
-require open amelie.Notation
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Constructive_logic
+require open amelie.lambdapi_examples.Notation
 
 //set declared "<>"
 //definition diff a b ≔ ¬(eq a b)
@@ -60,7 +60,7 @@ admit
 
 definition test2 ≔ λl r H, eq_ind l r H my_second_P
 
-//definition p ≔ λl r, 
+//definition p ≔ λl r,
 
 theorem discrd_2  : π (true = false) → π ⊥
 proof
@@ -77,7 +77,7 @@ type testj true
 //definition test ≔(λl r, (λb, if b = r ⊤ ⊥)  l = r)
 
 // Discriminate sur les Nat
-require open amelie.Nat
+require open amelie.lambdapi_examples.Nat
 symbol my_P_nat : ℕ → Prop
 rule my_P_nat 0  ↪ ⊤
  with my_P_nat (succ _) ↪ ⊥

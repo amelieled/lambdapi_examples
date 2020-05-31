@@ -1,5 +1,5 @@
-require open amelie.Notation
-require open amelie.Constructive_logic
+require open amelie.lambdapi_examples.Notation
+require open amelie.lambdapi_examples.Constructive_logic
 
 // Type of natural numbers
 constant symbol nat : Set

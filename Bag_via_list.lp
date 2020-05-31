@@ -1,10 +1,10 @@
 // Inspiré de Software_Foundations/lf/Basics.html
-require open amelie.Operations
-require open amelie.Polymorphic_list
-require open amelie.Nat
-require open amelie.Bool
-require open amelie.Constructive_logic
-require open amelie.Notation
+require open amelie.lambdapi_examples.Operations
+require open amelie.lambdapi_examples.Polymorphic_list
+require open amelie.lambdapi_examples.Nat
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Constructive_logic
+require open amelie.lambdapi_examples.Notation
 
 // Polymorphic if
 symbol if {a} : 𝔹 → a → a → a

@@ -1,8 +1,8 @@
-require open amelie.Notation
-require open amelie.Constructive_logic
-require open amelie.Discriminate
-require open amelie.Bool
-require open amelie.Nat
+require open amelie.lambdapi_examples.Notation
+require open amelie.lambdapi_examples.Constructive_logic
+require open amelie.lambdapi_examples.Discriminate
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Nat
 //require open amelie.Op_bool
 
 //////////////////////////
@@ -294,8 +294,8 @@ proof
 qed
 
 theorem two_steps_induction : Π(p : ℕ → Prop),
-π(p 0) → π(p 1) → π (forall (λn, p n ⊃ p (succ (succ n)))) →
-π (forall (λn, p n))
+π(p 0) → π(p 1) → π (∀ (λn, p n ⊃ p (succ (succ n)))) →
+π (∀ (λn, p n))
 proof
   assume p Hp0 Hp1 IHn
   refine nat_ind _ _ _

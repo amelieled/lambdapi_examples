@@ -1,5 +1,4 @@
-require open amelie.Notation
-//require open amelie.small
+require open amelie.lambdapi_examples.Notation
 
 // //////////////////////// Entiers naturels
 /////////////////////////////////////////////

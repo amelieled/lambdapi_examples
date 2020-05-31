@@ -1,4 +1,4 @@
-require open amelie.Notation
+require open amelie.lambdapi_examples.Notation
 
 // Inductive route : Type :=
 // | departementale : route

@@ -1,5 +1,5 @@
-require open amelie.Bool
-require open amelie.Nat
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Nat
 
 // Boolean equality on N
 symbol eqb_nat : ℕ → ℕ → 𝔹

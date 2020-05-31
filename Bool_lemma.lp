@@ -1,7 +1,7 @@
-require open amelie.Discriminate
-require open amelie.Bool
-require open amelie.Constructive_logic
-require open amelie.Notation
+require open amelie.lambdapi_examples.Discriminate
+require open amelie.lambdapi_examples.Bool
+require open amelie.lambdapi_examples.Constructive_logic
+require open amelie.lambdapi_examples.Notation
 
 // Check True. (* True : Prop *)
 type true // (* true : B *)
@@ -140,13 +140,13 @@ proof
   assume H apply conj_elim_left _ (b2 = true) apply H
 qed
 
-theorem or_true_iff b1 b2 : π (((or b1 b2) = true) ⇔ (b1 = true ∨ b2 = true))
+theorem or_true_iff b1 b2 : π (((orb b1 b2) = true) ⇔ (b1 = true ∨ b2 = true))
 proof
   assume b1 b2
-  refine bool_ind (λz, imp ((or z b2) = true)
+  refine bool_ind (λz, imp ((orb z b2) = true)
                            (z = true ∨ b2 = true) ∧
                        imp (z = true ∨ b2 = true)
-                           ((or z b2) = true)) _ _ _
+                           ((orb z b2) = true)) _ _ _
   // Case b1 = true
   simpl
   apply conj_intro

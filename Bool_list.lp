@@ -1,5 +1,5 @@
-require open amelie.Notation
-require open amelie.Bool
+require open amelie.lambdapi_examples.Notation
+require open amelie.lambdapi_examples.Bool
 
 // Inductive list_bool : Type :=
 // | nilb : list_bool
