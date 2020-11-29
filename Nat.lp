@@ -1,5 +1,5 @@
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Constructive_logic
+require open AL_library.Notation
+require open AL_library.Constructive_logic
 
 // Type of natural numbers
 constant symbol nat : Set
@@ -16,7 +16,10 @@ assert 42 : ℕ             // example
 // Induction principle
 symbol nat_ind p : π (p 0) → (Πx, π (p x) → π (p (succ x))) → Πx, π (p x)
 rule nat_ind _  $u _  0      ↪ $u
- with nat_ind $p $u $v (succ $n) ↪ $v $n (nat_ind $p $u $v $n)
+with nat_ind $p $u $v (succ $n) ↪ $v $n (nat_ind $p $u $v $n)
+
+//symbol nat_ind_math : π (∀ (λp : ℕ → Prop, p 0))
+//Π(P :ℕ → Prop), π(∃P) → π (¬(∀ (λm:ℕ, ¬ (P m))))
 
 // Injective principle
 symbol nat_inj : Πn m, π ((succ n) = (succ m)) → π (n = m)  // A voir !
@@ -33,7 +36,7 @@ symbol plus : ℕ → ℕ → ℕ
 set infix left 6 "+" ≔ plus
 assert λx y z,x+y+z ≡ λx y z,(x+y)+z // check that x+y=z is parsed correctly
 rule       0 + $y ↪ $y
- with succ $x + $y ↪ succ ($x + $y)
+with succ $x + $y ↪ succ ($x + $y)
 
 // Eval compute in (0 + 1).
 compute 0+1
@@ -139,7 +142,7 @@ qed
 symbol mult : ℕ → ℕ → ℕ
 set infix left 7 "×" ≔ mult
 rule       0 × _  ↪ 0
- with succ $x × $y ↪ $y + $x × $y
+with succ $x × $y ↪ $y + $x × $y
 assert λx y z,x+y×z ≡ λx y z,x+(y×z) // check that x+y×z is parsed correctly
 
 //Lemma mult_0_n : forall n : nat, 0*n=0.

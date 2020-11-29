@@ -1,6 +1,6 @@
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Constructive_logic
-require open amelie.lambdapi_examples.Nat
+require open AL_library.Notation
+require open AL_library.Constructive_logic
+require open AL_library.Nat
 
 //Lemma impl_and : forall P Q R : Prop, (P->Q->R) -> (P /\ Q -> R).
 //Proof

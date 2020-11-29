@@ -1,8 +1,8 @@
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Constructive_logic
-require open amelie.lambdapi_examples.Discriminate
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Nat
+require open AL_library.Notation
+require open AL_library.Constructive_logic
+require open AL_library.Discriminate
+require open AL_library.Bool
+require open AL_library.Nat
 //require open amelie.Op_bool
 
 //////////////////////////
@@ -316,7 +316,7 @@ qed
 //| succ a => negb (evenb a)
 symbol evenb : ℕ → 𝔹
 rule evenb     0     ↪ true
- with evenb (succ $a) ↪ neg (evenb $a)
+with evenb (succ $a) ↪ neg (evenb $a)
 
 //    Prouver les lemmes suivants. succi vous avez besoin de résultats sur les
 //    booléens, vous pouvez les trouver dans [Bool]

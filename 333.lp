@@ -1,7 +1,8 @@
-require open amelie.lambdapi_examples.Notation
+require open AL_library.Notation
 
-// //////////////////////// Entiers naturels
-/////////////////////////////////////////////
+// //////////////////////// 
+// Entiers naturels
+///////////////////////////
 constant symbol nat : Set
 set declared "ℕ"
 definition ℕ ≔ τ nat

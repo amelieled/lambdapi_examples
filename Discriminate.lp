@@ -1,6 +1,6 @@
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Constructive_logic
-require open amelie.lambdapi_examples.Notation
+require open AL_library.Bool
+require open AL_library.Constructive_logic
+require open AL_library.Notation
 
 //set declared "<>"
 //definition diff a b ≔ ¬(eq a b)
@@ -77,7 +77,7 @@ type testj true
 //definition test ≔(λl r, (λb, if b = r ⊤ ⊥)  l = r)
 
 // Discriminate sur les Nat
-require open amelie.lambdapi_examples.Nat
+require open AL_library.Nat
 symbol my_P_nat : ℕ → Prop
 rule my_P_nat 0  ↪ ⊤
  with my_P_nat (succ _) ↪ ⊥

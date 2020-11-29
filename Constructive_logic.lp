@@ -1,4 +1,4 @@
-require open amelie.lambdapi_examples.Notation
+require open AL_library.Notation
 
 // Conjunction
 constant symbol conj : Prop → Prop → Prop

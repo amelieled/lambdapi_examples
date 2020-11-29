@@ -1,7 +1,7 @@
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Nat
-require open amelie.lambdapi_examples.Constructive_logic
+require open AL_library.Notation
+require open AL_library.Bool
+require open AL_library.Nat
+require open AL_library.Constructive_logic
 
 //////////////////////////////////////
 // Type of polymorphic lists
@@ -14,7 +14,7 @@ set declared "𝕃"
 definition 𝕃a ≔ τ (list a)
 set declared "□"
 constant symbol □ {a} : 𝕃a
-constant symbol cons {a} : τa → 𝕃a → 𝕃a
+constant symbol cons {a} : τ a → 𝕃a → 𝕃a
 set infix right 4 "⸬" ≔ cons
 
 assert λA (l:𝕃A) x y, (cons x (cons y l)) ≡ λA (l:𝕃A) x y, (x⸬(y⸬l))
@@ -50,7 +50,7 @@ symbol list_ind {a} (p:𝕃a→Prop) :
 //  end.
 symbol length {a} : 𝕃a → ℕ
 rule length □ ↪ 0
- with length (_ ⸬ $l) ↪ succ (length $l)
+with length (_ ⸬ $l) ↪ succ (length $l)
 
 //Eval compute in (length bool
 //   (cons bool true
@@ -68,7 +68,7 @@ compute length (true⸬false ⸬□)
 symbol app {a} : 𝕃a → 𝕃a → 𝕃a
 set infix right 5 "⋅" ≔ app
 rule     □ ⋅ $m     ↪ $m
- with ($x ⸬ $l) ⋅ $m ↪ $x ⸬ ($l ⋅ $m)
+with ($x ⸬ $l) ⋅ $m ↪ $x ⸬ ($l ⋅ $m)
 
 assert a (x y z:𝕃a) ⊢ x⋅y⋅z ≡ x⋅(y⋅z)
 assert a x l m ⊢ x⸬l⋅m ≡ x⸬(l⋅m)
@@ -101,7 +101,7 @@ qed
 // et  montrer que reverse(reverse l) = l pour tout l, par induction sur l
 symbol reverse {A} : 𝕃A → 𝕃A
 rule reverse    □     ↪ □
- with reverse  ($v⸬$q) ↪ (reverse $q)⋅(cons $v □)
+with reverse  ($v⸬$q) ↪ (reverse $q)⋅(cons $v □)
 
 // Lemma app_nil : forall l, app l [] = l.
 // Proof.

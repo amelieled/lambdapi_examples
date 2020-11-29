@@ -5,7 +5,7 @@
 // Tout ce qui est en commentaire est du Coq qui compile.
 // Ma traduction vers LP suit.
 
-require open amelie.notation
+require open AL_library.Notation
 
 ////////////////////////////////////
 // Avant de prendre la route...

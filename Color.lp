@@ -1,8 +1,8 @@
 // Inspiré de Software_Foundations/lf/Basics.html
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Constructive_logic
-require open amelie.lambdapi_examples.Discriminate
+require open AL_library.Notation
+require open AL_library.Bool
+require open AL_library.Constructive_logic
+require open AL_library.Discriminate
 
 ///////////////////////////////////////
 // Definitions of type
@@ -52,8 +52,8 @@ symbol color_ind :
 //  end.
 symbol monochrome : C → 𝔹
 rule monochrome black     ↪ true
- with monochrome white     ↪ true
- with monochrome (primary _) ↪ false
+with monochrome white     ↪ true
+with monochrome (primary _) ↪ false
 
 //Definition isred (c : color) : bool :=
 //  match c with
@@ -64,10 +64,10 @@ rule monochrome black     ↪ true
 //  end.
 symbol isred : C → 𝔹
 rule isred black           ↪ false
- with isred white           ↪ false
- with isred (primary red)   ↪ true
- with isred (primary green) ↪ false
- with isred (primary blue)  ↪ false
+with isred white           ↪ false
+with isred (primary red)   ↪ true
+with isred (primary green) ↪ false
+with isred (primary blue)  ↪ false
 
 // Definition isgreen (c : color) : bool :=
 //   match c with
@@ -78,10 +78,10 @@ rule isred black           ↪ false
 //   end.
 symbol isgreen : C → 𝔹
 rule isgreen black           ↪ false
- with isgreen white           ↪ false
- with isgreen (primary green) ↪ true
- with isgreen (primary red)   ↪ false
- with isgreen (primary blue)  ↪ false
+with isgreen white           ↪ false
+with isgreen (primary green) ↪ true
+with isgreen (primary red)   ↪ false
+with isgreen (primary blue)  ↪ false
 
 // Definition isblue (c : color) : bool :=
 //   match c with
@@ -92,10 +92,10 @@ rule isgreen black           ↪ false
 //   end.
 symbol isblue : C → 𝔹
 rule isblue black           ↪ false
- with isblue white           ↪ false
- with isblue (primary blue)  ↪ true
- with isblue (primary red)   ↪ false
- with isblue (primary green) ↪ false
+with isblue white           ↪ false
+with isblue (primary blue)  ↪ true
+with isblue (primary red)   ↪ false
+with isblue (primary green) ↪ false
 
 ////////////////////////////////////
 // A proof of : forall c, isred c = true \/ isgreen c = true \/ isblue c = true <-> monochrome c = false

@@ -1,6 +1,6 @@
-require open amelie.lambdapi_examples.Notation
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Constructive_logic
+require open AL_library.Notation
+require open AL_library.Bool
+require open AL_library.Constructive_logic
 
 ///////////////////////////////////////
 // Definitions of type

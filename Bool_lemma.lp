@@ -1,7 +1,7 @@
-require open amelie.lambdapi_examples.Discriminate
-require open amelie.lambdapi_examples.Bool
-require open amelie.lambdapi_examples.Constructive_logic
-require open amelie.lambdapi_examples.Notation
+require open AL_library.Discriminate
+require open AL_library.Bool
+require open AL_library.Constructive_logic
+require open AL_library.Notation
 
 // Check True. (* True : Prop *)
 type true // (* true : B *)

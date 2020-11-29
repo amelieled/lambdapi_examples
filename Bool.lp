@@ -1,4 +1,5 @@
-require open amelie.lambdapi_examples.Notation
+require open AL_library.Notation
+
 //////////////////////
 // Boolean type
 //////////////////////
@@ -11,7 +12,7 @@ constant symbol false : 𝔹
 // Induction principle on B.
 symbol bool_ind : Πp, π(p true) → π(p false) → Πb, π(p b)
 rule bool_ind _ $t _  true  ↪ $t
- with bool_ind _ _  $f false ↪ $f
+with bool_ind _ _  $f false ↪ $f
 
 ////////////////////////////////
 //  Some operations
@@ -25,7 +26,7 @@ rule bool_ind _ $t _  true  ↪ $t
 //  end.
 symbol neg : 𝔹 → 𝔹
 rule neg true  ↪ false
- with neg false ↪ true
+with neg false ↪ true
 
 // Disjunction
 // Definition or b1 b2 :=
@@ -36,9 +37,9 @@ rule neg true  ↪ false
 symbol orb : 𝔹 → 𝔹 → 𝔹
 set infix left 6 "|" ≔ orb
 rule true | _  ↪ true
- with _  | true ↪ true
- with false | $b ↪ $b
- with $b | false ↪ $b
+with _  | true ↪ true
+with false | $b ↪ $b
+with $b | false ↪ $b
 
 // Conjunction
 // Definition andb b1 b2 :=
@@ -52,6 +53,7 @@ rule true  & $b    ↪ $b
 with $b    & true  ↪ $b
 with false & _     ↪ false
 with _     & false ↪ false
+
 ////////////////////////////////////////////////
 //  Some examples of functions definitions
 ////////////////////////////////////////////////
@@ -88,6 +90,7 @@ definition my_first ≔ apply_neg (λb1 _, b1)
 
 //Eval compute in (my_first true false).
 compute (my_first true false)
+
 //Definition apply_neg_gen (A:Type) (f:_->_->A) b1 b2 :=
 //  f (not b1) (not b2).
 definition apply_neg_gen A (f : _ → _ → A) b1 b2 ≔
