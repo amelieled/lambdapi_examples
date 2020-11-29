@@ -1,3 +1,10 @@
+Please note that there is a file "lambdapi.pkg" at the same level of this directory's content.
+This file is composed of the following lines:
+```
+package_name = AL_library
+root_path = AL_library
+```
+
 Content of files :
 
    - (number).lp: linking with the issue n°(number)
